@@ -301,7 +301,7 @@
     background: rgba(0,212,255,.15);
     border-color: var(--accent); color: var(--accent);
   }
-  #main-chart { width: 100%; height: 300px; }
+  #main-chart { display: block; }
 
   /* ── Watchlist ── */
   .watchlist { display: flex; flex-direction: column; gap: 8px; }
@@ -689,8 +689,8 @@
           </div>
         </div>
       </div>
-      <div style="position:relative;height:300px;">
-        <canvas id="main-chart"></canvas>
+      <div style="position:relative;width:100%;height:300px;">
+        <canvas id="main-chart" style="position:absolute;inset:0;"></canvas>
       </div>
     </div>
 
@@ -1043,6 +1043,8 @@ function drawMainChart(tf = '1W') {
   grad.addColorStop(0, up ? 'rgba(0,230,118,.3)' : 'rgba(255,23,68,.3)');
   grad.addColorStop(1, 'rgba(0,0,0,0)');
 
+  canvas.width  = canvas.parentElement.offsetWidth;
+  canvas.height = 300;
   if (mainChart) mainChart.destroy();
   mainChart = new Chart(ctx, {
     type: 'line',
@@ -1063,8 +1065,9 @@ function drawMainChart(tf = '1W') {
       }]
     },
     options: {
-      responsive: true,
+      responsive: false,
       maintainAspectRatio: false,
+      animation: { duration: 400 },
       interaction: { mode: 'index', intersect: false },
       plugins: {
         legend: { display: false },
