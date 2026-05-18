@@ -39,10 +39,13 @@
   ::-webkit-scrollbar-track { background: var(--bg2); }
   ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
 
-  /* ── Animated Background ── */
-  #bg-canvas {
-    position: fixed; inset: 0; z-index: 0;
-    pointer-events: none; opacity: .4;
+  /* ── CSS Background (remplace canvas JS) ── */
+  body::before {
+    content: ''; position: fixed; inset: 0; z-index: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(ellipse 80% 50% at 10% 20%, rgba(0,212,255,.06) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 40% at 90% 80%, rgba(124,58,237,.05) 0%, transparent 60%);
   }
 
   /* ── Ticker Tape ── */
@@ -355,10 +358,11 @@
   .hm-cell {
     border-radius: 8px; padding: 10px 6px;
     text-align: center; cursor: pointer;
-    transition: all .2s; position: relative;
-    overflow: hidden;
+    transition: opacity .15s;
+    contain: layout style paint;
+    will-change: opacity;
   }
-  .hm-cell:hover { filter: brightness(1.3); z-index: 2; }
+  .hm-cell:hover { opacity: .75; }
   .hm-sym { font-size: 12px; font-weight: 700; }
   .hm-chg { font-size: 11px; font-weight: 600; margin-top: 2px; }
 
@@ -403,8 +407,9 @@
   .news-card {
     background: var(--card); border: 1px solid var(--border);
     border-radius: 16px; overflow: hidden;
-    cursor: pointer; transition: all .3s;
+    cursor: pointer; transition: border-color .2s;
     display: flex; flex-direction: column;
+    contain: layout style;
   }
   .news-card:hover { border-color: rgba(0,212,255,.3); }
   .news-img {
@@ -436,7 +441,8 @@
     background: var(--card); border: 1px solid var(--border);
     border-radius: 16px; padding: 20px;
     display: flex; flex-direction: column; gap: 6px;
-    transition: all .3s;
+    transition: border-color .2s;
+    contain: layout style;
   }
   .stat-card:hover { border-color: rgba(0,212,255,.3); }
   .stat-label { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
@@ -553,9 +559,6 @@
 
 <!-- Loader -->
 <div class="loader-bar" id="loader"></div>
-
-<!-- Background Canvas -->
-<canvas id="bg-canvas"></canvas>
 
 <!-- Tooltip -->
 <div class="tooltip" id="tooltip">
@@ -884,67 +887,6 @@ const DATA = {
   ],
 };
 
-/* ════════════════════════════════════════════════
-   BACKGROUND CANVAS — particle grid
-   ════════════════════════════════════════════════ */
-(function() {
-  const canvas = document.getElementById('bg-canvas');
-  const ctx = canvas.getContext('2d');
-  let W, H, particles = [];
-
-  function resize() {
-    W = canvas.width  = window.innerWidth;
-    H = canvas.height = window.innerHeight;
-  }
-  resize();
-  window.addEventListener('resize', resize);
-
-  for (let i = 0; i < 35; i++) {
-    particles.push({
-      x: Math.random() * W,
-      y: Math.random() * H,
-      r: Math.random() * 1.2 + .4,
-      vx: (Math.random() - .5) * .2,
-      vy: (Math.random() - .5) * .2,
-      alpha: Math.random() * .5 + .1,
-    });
-  }
-
-  let last = 0;
-  function draw(ts) {
-    requestAnimationFrame(draw);
-    if (ts - last < 33) return; // cap at ~30fps
-    last = ts;
-    ctx.clearRect(0, 0, W, H);
-    particles.forEach(p => {
-      p.x += p.vx; p.y += p.vy;
-      if (p.x < 0) p.x = W; if (p.x > W) p.x = 0;
-      if (p.y < 0) p.y = H; if (p.y > H) p.y = 0;
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(0,212,255,${p.alpha})`;
-      ctx.fill();
-    });
-    // only check every other particle pair to halve the work
-    for (let i = 0; i < particles.length; i += 2) {
-      for (let j = i+1; j < particles.length; j++) {
-        const dx = particles[i].x - particles[j].x;
-        const dy = particles[i].y - particles[j].y;
-        const d2 = dx*dx + dy*dy;
-        if (d2 < 10000) {
-          const d = Math.sqrt(d2);
-          ctx.beginPath();
-          ctx.moveTo(particles[i].x, particles[i].y);
-          ctx.lineTo(particles[j].x, particles[j].y);
-          ctx.strokeStyle = `rgba(0,212,255,${.12*(1-d/100)})`;
-          ctx.lineWidth = .5;
-          ctx.stroke();
-        }
-      }
-    }
-  }
-  requestAnimationFrame(draw);
-})();
 
 /* ════════════════════════════════════════════════
    TICKER TAPE
@@ -1517,8 +1459,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.fade-in').forEach(el => io.observe(el));
   }, 100);
 
-  // Live updates every 3 seconds
-  setInterval(liveUpdate, 3000);
+  setInterval(liveUpdate, 8000);
   setInterval(updateMarketStatus, 60000);
 
   // Loader out
