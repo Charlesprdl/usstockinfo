@@ -623,33 +623,33 @@
   <div class="stats-row fade-in">
     <div class="stat-card">
       <div class="stat-label">Titres Actifs</div>
-      <div class="stat-value" id="stat-stocks">5 847</div>
+      <div class="stat-value" id="stat-stocks">5 912</div>
       <div class="stat-sub">NYSE + NASDAQ</div>
     </div>
     <div class="stat-card">
       <div class="stat-label">Volume Total</div>
-      <div class="stat-value" id="stat-vol">$12.4B</div>
-      <div class="stat-sub">Aujourd'hui</div>
+      <div class="stat-value" id="stat-vol">$18.7B</div>
+      <div class="stat-sub">Aujourd'hui · 18 mai 2026</div>
     </div>
     <div class="stat-card">
       <div class="stat-label">Hausse du Jour</div>
-      <div class="stat-value" style="color:var(--green)" id="stat-adv">2 341</div>
+      <div class="stat-value" style="color:var(--green)" id="stat-adv">1 847</div>
       <div class="stat-sub">Actions en hausse</div>
     </div>
     <div class="stat-card">
       <div class="stat-label">Baisse du Jour</div>
-      <div class="stat-value" style="color:var(--red)" id="stat-dec">1 203</div>
+      <div class="stat-value" style="color:var(--red)" id="stat-dec">2 811</div>
       <div class="stat-sub">Actions en baisse</div>
     </div>
     <div class="stat-card">
       <div class="stat-label">Fear & Greed</div>
-      <div class="stat-value" style="color:var(--yellow)" id="stat-fg">72</div>
-      <div class="stat-sub">Greed</div>
+      <div class="stat-value" style="color:var(--yellow)" id="stat-fg">63</div>
+      <div class="stat-sub">Greed · CNN Index</div>
     </div>
     <div class="stat-card">
       <div class="stat-label">VIX</div>
-      <div class="stat-value" id="stat-vix">14.82</div>
-      <div class="stat-sub">Volatilité implicite</div>
+      <div class="stat-value" id="stat-vix">17.20</div>
+      <div class="stat-sub">+12% · Hausse de volatilité</div>
     </div>
   </div>
 
@@ -676,8 +676,8 @@
         <div>
           <div class="chart-symbol" id="chart-symbol">S&P 500 <span style="font-size:14px;color:var(--muted)">SPX</span></div>
           <div style="display:flex;align-items:baseline;gap:10px;margin-top:4px;">
-            <div class="chart-price" id="chart-price">5 248.94</div>
-            <div class="chart-change up" id="chart-change">+42.31 (+0.81%)</div>
+            <div class="chart-price" id="chart-price">7 408.50</div>
+            <div class="chart-change down" id="chart-change">-92.74 (-1.24%)</div>
           </div>
           <div style="font-size:12px;color:var(--muted);margin-top:4px;">Dernière MAJ: <span id="last-update">—</span></div>
         </div>
@@ -789,101 +789,106 @@
 
 <script>
 /* ════════════════════════════════════════════════
-   DATA LAYER — simulated market data
+   DATA LAYER — données réelles US Market 18 mai 2026
+   Sources: Motley Fool, CNBC, TheStreet, CNN Markets
    ════════════════════════════════════════════════ */
 const DATA = {
   indices: [
-    { name:'S&P 500',  sym:'SPX',  val:5248.94, chg:+42.31, pct:+0.81 },
-    { name:'NASDAQ',   sym:'NDX',  val:18342.10, chg:+187.55, pct:+1.03 },
-    { name:'Dow Jones',sym:'DJIA', val:39127.80, chg:-45.20,  pct:-0.12 },
-    { name:'Russell 2000',sym:'RUT',val:2082.34, chg:+18.77, pct:+0.91 },
-    { name:'VIX',      sym:'VIX',  val:14.82,  chg:-0.43,   pct:-2.82 },
-    { name:'10Y Yield',sym:'TNX',  val:4.32,   chg:+0.04,   pct:+0.94, pct_unit:'%' },
+    { name:'S&P 500',     sym:'SPX',  val:7408.50,  chg:-92.74,  pct:-1.24 },
+    { name:'NASDAQ',      sym:'NDX',  val:26225.14, chg:-411.08, pct:-1.54 },
+    { name:'Dow Jones',   sym:'DJIA', val:49526.17, chg:-537.63, pct:-1.07 },
+    { name:'Russell 2000',sym:'RUT',  val:2793.30,  chg:-69.79,  pct:-2.44 },
+    { name:'VIX',         sym:'VIX',  val:17.20,   chg:+1.84,   pct:+12.0 },
+    { name:'10Y Yield',   sym:'TNX',  val:4.591,   chg:+0.12,   pct:+2.68, pct_unit:'%' },
   ],
   watchlist: [
-    { sym:'AAPL', name:'Apple Inc.',       price:189.84, chg:+1.23, pct:+0.65, color:'#00d4ff' },
-    { sym:'NVDA', name:'NVIDIA Corp.',     price:875.40, chg:+22.40, pct:+2.63, color:'#76b900' },
-    { sym:'MSFT', name:'Microsoft Corp.', price:412.70, chg:-2.10,  pct:-0.51, color:'#00a4ef' },
-    { sym:'TSLA', name:'Tesla Inc.',       price:178.20, chg:+8.90,  pct:+5.26, color:'#cc0000' },
-    { sym:'AMZN', name:'Amazon.com Inc.', price:183.50, chg:+1.80,  pct:+0.99, color:'#ff9900' },
-    { sym:'GOOG', name:'Alphabet Inc.',   price:174.32, chg:-0.68,  pct:-0.39, color:'#4285f4' },
-    { sym:'META', name:'Meta Platforms',  price:489.20, chg:+12.40, pct:+2.60, color:'#1877f2' },
+    { sym:'NVDA', name:'NVIDIA Corp.',     price:224.69, chg:-0.63,  pct:-0.28, color:'#76b900' },
+    { sym:'AAPL', name:'Apple Inc.',       price:298.52, chg:-1.71,  pct:-0.57, color:'#00d4ff' },
+    { sym:'MSFT', name:'Microsoft Corp.', price:421.36, chg:-0.55,  pct:-0.13, color:'#00a4ef' },
+    { sym:'AMZN', name:'Amazon.com Inc.', price:266.94, chg:+2.80,  pct:+1.06, color:'#ff9900' },
+    { sym:'META', name:'Meta Platforms',  price:609.15, chg:-5.10,  pct:-0.83, color:'#1877f2' },
+    { sym:'TSLA', name:'Tesla Inc.',       price:413.27, chg:-8.95,  pct:-2.12, color:'#cc0000' },
+    { sym:'GOOG', name:'Alphabet Inc.',   price:397.71, chg:+3.36,  pct:+0.85, color:'#4285f4' },
   ],
   gainers: [
-    { sym:'SMCI', name:'Super Micro',  chg:+18.42, sector:'Tech' },
-    { sym:'ENPH', name:'Enphase',      chg:+11.20, sector:'Energy' },
-    { sym:'MRVL', name:'Marvell Tech', chg:+9.87,  sector:'Tech' },
-    { sym:'ON',   name:'ON Semi',      chg:+8.34,  sector:'Tech' },
-    { sym:'DXCM', name:'Dexcom',       chg:+7.91,  sector:'Health' },
+    { sym:'SEDG', name:'SolarEdge Tech',   chg:+22.93, sector:'Energy' },
+    { sym:'FIG',  name:'Figma Inc.',        chg:+13.24, sector:'Tech' },
+    { sym:'MICC', name:'Magnum Ice Cream', chg:+10.92, sector:'Cons.' },
+    { sym:'ENPH', name:'Enphase Energy',   chg:+10.16, sector:'Energy' },
+    { sym:'SOC',  name:'Sable Offshore',   chg:+10.04, sector:'Energy' },
   ],
   losers: [
-    { sym:'MRNA', name:'Moderna',      chg:-12.40, sector:'Health' },
-    { sym:'SWK',  name:'Stanley Black',chg:-7.82,  sector:'Industrie' },
-    { sym:'DG',   name:'Dollar General',chg:-6.54, sector:'Cons.' },
-    { sym:'FMC',  name:'FMC Corp',     chg:-5.23,  sector:'Matériaux' },
-    { sym:'ETSY', name:'Etsy Inc.',    chg:-4.87,  sector:'Cons.' },
+    { sym:'POET', name:'POET Technologies',chg:-22.36, sector:'Tech' },
+    { sym:'TNGX', name:'Tango Therapeutics',chg:-17.33, sector:'Health' },
+    { sym:'YSS',  name:'York Space Sys.',  chg:-17.00, sector:'Industrie' },
+    { sym:'DLO',  name:'DLocal Limited',   chg:-13.03, sector:'Fin' },
+    { sym:'USAS', name:'Americas Gold',    chg:-12.59, sector:'Matériaux' },
   ],
   heatmap: [
-    { sym:'AAPL',chg:+0.65 },{ sym:'MSFT',chg:-0.51 },{ sym:'NVDA',chg:+2.63 },
-    { sym:'GOOG',chg:-0.39 },{ sym:'AMZN',chg:+0.99 },{ sym:'META',chg:+2.60 },
-    { sym:'TSLA',chg:+5.26 },{ sym:'BRK',chg:+0.12 }, { sym:'JPM', chg:+1.04 },
-    { sym:'JNJ', chg:-0.85 },{ sym:'V',   chg:+0.72 },{ sym:'PG',  chg:-0.30 },
-    { sym:'XOM', chg:+1.45 },{ sym:'UNH', chg:-1.23 },{ sym:'LLY', chg:+3.12 },
-    { sym:'HD',  chg:-0.47 },{ sym:'CVX', chg:+0.88 },{ sym:'ABBV',chg:-0.62 },
-    { sym:'MRK', chg:+0.35 },{ sym:'PEP', chg:-0.18 },{ sym:'KO',  chg:+0.09 },
-    { sym:'BAC', chg:+1.34 },{ sym:'WMT', chg:-0.55 },{ sym:'MA',  chg:+0.91 },
-    { sym:'DIS', chg:-1.10 },{ sym:'CSCO',chg:+0.44 },{ sym:'ADBE',chg:+1.78 },
-    { sym:'CRM', chg:+2.10 },{ sym:'PYPL',chg:-2.33 },{ sym:'INTC',chg:-3.12 },
+    { sym:'NVDA',chg:-0.28 },{ sym:'GOOG',chg:+0.85 },{ sym:'AAPL',chg:-0.57 },
+    { sym:'MSFT',chg:-0.13 },{ sym:'AMZN',chg:+1.06 },{ sym:'TSM', chg:-1.24 },
+    { sym:'AVGO',chg:-1.85 },{ sym:'META',chg:-0.83 },{ sym:'TSLA',chg:-2.12 },
+    { sym:'WMT', chg:+0.73 },{ sym:'LLY', chg:-1.30 },{ sym:'MU',  chg:+0.34 },
+    { sym:'JPM', chg:+0.84 },{ sym:'XOM', chg:-1.17 },{ sym:'AMD', chg:+0.36 },
+    { sym:'V',   chg:+0.83 },{ sym:'ORCL',chg:-0.92 },{ sym:'NFLX',chg:+1.44 },
+    { sym:'CRM', chg:-0.55 },{ sym:'ADBE',chg:-1.02 },{ sym:'INTC',chg:-2.87 },
+    { sym:'BAC', chg:+0.61 },{ sym:'GS',  chg:+0.44 },{ sym:'MA',  chg:+0.70 },
+    { sym:'PG',  chg:-0.21 },{ sym:'KO',  chg:+0.15 },{ sym:'JNJ', chg:-0.48 },
+    { sym:'CVX', chg:-0.95 },{ sym:'PYPL',chg:-1.67 },{ sym:'SEDG',chg:+22.93},
   ],
   news: [
-    { emoji:'📈', tag:'Fed / Macro', title:'La Fed maintient ses taux : le marché anticipe une baisse en septembre 2026', time:'Il y a 2h', sentiment:'bullish' },
-    { emoji:'💡', tag:'Technologie', title:'NVIDIA dépasse les attentes avec un chiffre d\'affaires record de 26 Mds$ au T1', time:'Il y a 4h', sentiment:'bullish' },
-    { emoji:'⚠️', tag:'Risque', title:'Regain de tensions commerciales US-Chine : les semi-conducteurs sous pression', time:'Il y a 5h', sentiment:'bearish' },
-    { emoji:'🏦', tag:'Bancaire', title:'JPMorgan relève ses prévisions bénéfices grâce à la hausse des taux d\'intérêt', time:'Il y a 7h', sentiment:'bullish' },
-    { emoji:'🛢️', tag:'Énergie', title:'Le pétrole WTI se stabilise à $82 avant les données EIA de la semaine', time:'Il y a 8h', sentiment:'neutral' },
-    { emoji:'🏥', tag:'Santé', title:'Moderna chute après des résultats décevants pour son vaccin anti-cancer ARNm', time:'Il y a 9h', sentiment:'bearish' },
+    { emoji:'🚀', tag:'IPO', title:'SpaceX vise la plus grande introduction en bourse de l\'histoire : $75 Mds à $1 750 Mds de valorisation, cotation SPCX sur le Nasdaq en juin 2026', time:'Il y a 1h', sentiment:'bullish' },
+    { emoji:'⚠️', tag:'Fed / Macro', title:'Le nouveau président de la Fed Kevin Warsh envisage une hausse des taux plutôt qu\'une baisse — les marchés reprennent', time:'Il y a 3h', sentiment:'bearish' },
+    { emoji:'🌍', tag:'Géopolitique', title:'Trump avertit l\'Iran : "l\'horloge tourne" — tensions au Moyen-Orient font monter le pétrole et les rendements', time:'Il y a 4h', sentiment:'bearish' },
+    { emoji:'💡', tag:'Technologie', title:'NVIDIA publie ses résultats T1 mercredi 21 mai — le marché anticipe un CA de 43 Mds$ porté par la demande en puces IA', time:'Il y a 5h', sentiment:'bullish' },
+    { emoji:'📉', tag:'Obligations', title:'Le rendement du 10 ans US atteint 4,591%, son plus haut en 15 mois — les actions tech en pression', time:'Il y a 6h', sentiment:'bearish' },
+    { emoji:'🏪', tag:'Distribution', title:'Walmart publie ses résultats jeudi — WMT en hausse de +0,73% porté par les attentes de bénéfices solides', time:'Il y a 8h', sentiment:'bullish' },
   ],
   screener: [
-    { rank:1,  sym:'AAPL', name:'Apple Inc.',        sector:'Tech',    price:189.84, chg:+0.65, cap:'2.93T', pe:29.2, vol:0.55, range:'164–199' },
-    { rank:2,  sym:'MSFT', name:'Microsoft Corp.',   sector:'Tech',    price:412.70, chg:-0.51, cap:'3.07T', pe:36.8, vol:0.42, range:'310–430' },
-    { rank:3,  sym:'NVDA', name:'NVIDIA Corp.',      sector:'Tech',    price:875.40, chg:+2.63, cap:'2.16T', pe:67.1, vol:0.88, range:'373–974' },
-    { rank:4,  sym:'GOOG', name:'Alphabet Inc.',     sector:'Tech',    price:174.32, chg:-0.39, cap:'2.19T', pe:27.4, vol:0.33, range:'120–193' },
-    { rank:5,  sym:'AMZN', name:'Amazon.com Inc.',   sector:'Tech',    price:183.50, chg:+0.99, cap:'1.92T', pe:58.2, vol:0.61, range:'118–201' },
-    { rank:6,  sym:'META', name:'Meta Platforms',    sector:'Tech',    price:489.20, chg:+2.60, cap:'1.25T', pe:24.1, vol:0.72, range:'274–542' },
-    { rank:7,  sym:'TSLA', name:'Tesla Inc.',        sector:'Tech',    price:178.20, chg:+5.26, cap:'0.57T', pe:52.3, vol:0.95, range:'138–293' },
-    { rank:8,  sym:'JPM',  name:'JPMorgan Chase',    sector:'Fin',     price:196.40, chg:+1.04, cap:'0.57T', pe:11.8, vol:0.45, range:'135–208' },
-    { rank:9,  sym:'BRK',  name:'Berkshire Hathaway',sector:'Fin',    price:390.20, chg:+0.12, cap:'0.86T', pe:21.4, vol:0.22, range:'310–416' },
-    { rank:10, sym:'LLY',  name:'Eli Lilly',         sector:'Health',  price:760.50, chg:+3.12, cap:'0.72T', pe:88.4, vol:0.58, range:'492–843' },
-    { rank:11, sym:'V',    name:'Visa Inc.',          sector:'Fin',    price:273.80, chg:+0.72, cap:'0.56T', pe:31.5, vol:0.38, range:'215–290' },
-    { rank:12, sym:'UNH',  name:'UnitedHealth',       sector:'Health', price:492.30, chg:-1.23, cap:'0.45T', pe:22.7, vol:0.44, range:'432–560' },
-    { rank:13, sym:'XOM',  name:'Exxon Mobil',        sector:'Energy', price:112.40, chg:+1.45, cap:'0.45T', pe:14.2, vol:0.67, range:'95–124' },
-    { rank:14, sym:'PG',   name:'Procter & Gamble',   sector:'Cons.',  price:162.80, chg:-0.30, cap:'0.38T', pe:26.3, vol:0.29, range:'138–170' },
-    { rank:15, sym:'HD',   name:'Home Depot',          sector:'Cons.', price:342.10, chg:-0.47, cap:'0.34T', pe:23.1, vol:0.41, range:'273–385' },
-    { rank:16, sym:'MRK',  name:'Merck & Co.',         sector:'Health',price:126.40, chg:+0.35, cap:'0.32T', pe:16.8, vol:0.35, range:'102–135' },
-    { rank:17, sym:'BAC',  name:'Bank of America',     sector:'Fin',   price:38.20,  chg:+1.34, cap:'0.30T', pe:12.4, vol:0.78, range:'26–43' },
-    { rank:18, sym:'CVX',  name:'Chevron Corp.',        sector:'Energy',price:156.80, chg:+0.88, cap:'0.29T', pe:13.7, vol:0.52, range:'135–170' },
-    { rank:19, sym:'ABBV', name:'AbbVie Inc.',          sector:'Health',price:164.20, chg:-0.62, cap:'0.29T', pe:20.9, vol:0.43, range:'138–182' },
-    { rank:20, sym:'KO',   name:'Coca-Cola Co.',        sector:'Cons.', price:61.40,  chg:+0.09, cap:'0.27T', pe:24.8, vol:0.31, range:'54–68' },
+    { rank:1,  sym:'NVDA', name:'NVIDIA Corp.',       sector:'Tech',   price:224.69, chg:-0.28, cap:'5.50T', pe:38.2, vol:2.41, range:'86–231' },
+    { rank:2,  sym:'GOOG', name:'Alphabet Inc.',      sector:'Tech',   price:397.71, chg:+0.85, cap:'4.80T', pe:22.1, vol:0.74, range:'148–408' },
+    { rank:3,  sym:'AAPL', name:'Apple Inc.',         sector:'Tech',   price:298.52, chg:-0.57, cap:'4.40T', pe:29.9, vol:0.98, range:'182–302' },
+    { rank:4,  sym:'MSFT', name:'Microsoft Corp.',    sector:'Tech',   price:421.36, chg:-0.13, cap:'3.10T', pe:31.4, vol:0.55, range:'330–436' },
+    { rank:5,  sym:'AMZN', name:'Amazon.com Inc.',    sector:'Tech',   price:266.94, chg:+1.06, cap:'2.80T', pe:43.7, vol:0.88, range:'178–280' },
+    { rank:6,  sym:'TSM',  name:'Taiwan Semiconductor',sector:'Tech',  price:399.32, chg:-1.24, cap:'2.10T', pe:28.6, vol:0.42, range:'140–415' },
+    { rank:7,  sym:'AVGO', name:'Broadcom Inc.',      sector:'Tech',   price:417.33, chg:-1.85, cap:'2.00T', pe:34.8, vol:0.61, range:'142–435' },
+    { rank:8,  sym:'META', name:'Meta Platforms',     sector:'Tech',   price:609.15, chg:-0.83, cap:'1.60T', pe:34.3, vol:0.77, range:'444–740' },
+    { rank:9,  sym:'TSLA', name:'Tesla Inc.',         sector:'Tech',   price:413.27, chg:-2.12, cap:'1.60T', pe:296.7,vol:1.34, range:'180–490' },
+    { rank:10, sym:'WMT',  name:'Walmart Inc.',       sector:'Cons.',  price:132.41, chg:+0.73, cap:'1.00T', pe:38.1, vol:0.44, range:'77–136' },
+    { rank:11, sym:'LLY',  name:'Eli Lilly & Co.',    sector:'Health', price:991.89, chg:-1.30, cap:'946B',  pe:109.4,vol:0.31, range:'705–1090' },
+    { rank:12, sym:'MU',   name:'Micron Technology',  sector:'Tech',   price:727.09, chg:+0.34, cap:'817B',  pe:14.2, vol:0.53, range:'72–745' },
+    { rank:13, sym:'JPM',  name:'JPMorgan Chase',     sector:'Fin',    price:300.31, chg:+0.84, cap:'798B',  pe:13.1, vol:0.62, range:'195–312' },
+    { rank:14, sym:'AMD',  name:'Adv. Micro Devices', sector:'Tech',   price:425.63, chg:+0.36, cap:'691B',  pe:89.3, vol:0.95, range:'112–445' },
+    { rank:15, sym:'XOM',  name:'ExxonMobil Corp.',   sector:'Energy', price:156.07, chg:-1.17, cap:'654B',  pe:14.8, vol:0.58, range:'104–167' },
+    { rank:16, sym:'V',    name:'Visa Inc.',           sector:'Fin',    price:328.44, chg:+0.83, cap:'613B',  pe:33.2, vol:0.41, range:'242–340' },
+    { rank:17, sym:'ORCL', name:'Oracle Corp.',        sector:'Tech',   price:276.40, chg:-0.92, cap:'600B',  pe:48.7, vol:0.38, range:'108–283' },
+    { rank:18, sym:'NFLX', name:'Netflix Inc.',        sector:'Cons.',  price:1320.50,chg:+1.44, cap:'565B',  pe:57.4, vol:0.29, range:'555–1360' },
+    { rank:19, sym:'GS',   name:'Goldman Sachs',       sector:'Fin',    price:688.20, chg:+0.44, cap:'220B',  pe:15.6, vol:0.22, range:'420–710' },
+    { rank:20, sym:'MA',   name:'Mastercard Inc.',     sector:'Fin',    price:578.30, chg:+0.70, cap:'515B',  pe:40.2, vol:0.35, range:'418–592' },
   ],
   ticker: [
-    { sym:'AAPL', val:189.84, chg:+0.65 },
-    { sym:'NVDA', val:875.40, chg:+2.63 },
-    { sym:'MSFT', val:412.70, chg:-0.51 },
-    { sym:'TSLA', val:178.20, chg:+5.26 },
-    { sym:'AMZN', val:183.50, chg:+0.99 },
-    { sym:'GOOG', val:174.32, chg:-0.39 },
-    { sym:'META', val:489.20, chg:+2.60 },
-    { sym:'JPM',  val:196.40, chg:+1.04 },
-    { sym:'BRK',  val:390.20, chg:+0.12 },
-    { sym:'LLY',  val:760.50, chg:+3.12 },
-    { sym:'V',    val:273.80, chg:+0.72 },
-    { sym:'SPX',  val:5248.94, chg:+0.81 },
-    { sym:'NDX',  val:18342.10, chg:+1.03 },
-    { sym:'DJIA', val:39127.80, chg:-0.12 },
-    { sym:'VIX',  val:14.82,  chg:-2.82 },
-    { sym:'BTC',  val:67840,  chg:+2.10 },
-    { sym:'GLD',  val:2321.40, chg:+0.35 },
-    { sym:'WTI',  val:82.14,  chg:-0.88 },
+    { sym:'NVDA', val:224.69,  chg:-0.28 },
+    { sym:'AAPL', val:298.52,  chg:-0.57 },
+    { sym:'MSFT', val:421.36,  chg:-0.13 },
+    { sym:'TSLA', val:413.27,  chg:-2.12 },
+    { sym:'AMZN', val:266.94,  chg:+1.06 },
+    { sym:'GOOG', val:397.71,  chg:+0.85 },
+    { sym:'META', val:609.15,  chg:-0.83 },
+    { sym:'JPM',  val:300.31,  chg:+0.84 },
+    { sym:'WMT',  val:132.41,  chg:+0.73 },
+    { sym:'LLY',  val:991.89,  chg:-1.30 },
+    { sym:'V',    val:328.44,  chg:+0.83 },
+    { sym:'SPX',  val:7408.50, chg:-1.24 },
+    { sym:'NDX',  val:26225.14,chg:-1.54 },
+    { sym:'DJIA', val:49526.17,chg:-1.07 },
+    { sym:'VIX',  val:17.20,  chg:+12.0 },
+    { sym:'TNX',  val:4.591,  chg:+2.68 },
+    { sym:'AMD',  val:425.63,  chg:+0.36 },
+    { sym:'AVGO', val:417.33,  chg:-1.85 },
+    { sym:'TSM',  val:399.32,  chg:-1.24 },
+    { sym:'NFLX', val:1320.50, chg:+1.44 },
+    { sym:'ORCL', val:276.40,  chg:-0.92 },
+    { sym:'GS',   val:688.20,  chg:+0.44 },
   ],
 };
 
@@ -966,7 +971,7 @@ function generateChartData(tf) {
   const map = { '1D':390, '1W':5*78, '1M':22*30, '3M':66*30, '1Y':252*30, '5Y':1260*30 };
   const points = map[tf] || 200;
   const labels = [], data = [];
-  let v = 5000 + Math.random() * 300;
+  let v = 7100 + Math.random() * 400;
   for (let i = 0; i < points; i++) {
     v += (Math.random() - .47) * (v * .003);
     data.push(parseFloat(v.toFixed(2)));
@@ -1219,12 +1224,12 @@ function sortTable(col) {
 function renderVolProfile() {
   const el = document.getElementById('vol-profile');
   const zones = [
-    { label:'5300+', val:12, up:true  },
-    { label:'5250',  val:87, up:true  },
-    { label:'5200',  val:64, up:true  },
-    { label:'5150',  val:45, up:false },
-    { label:'5100',  val:30, up:false },
-    { label:'5050',  val:22, up:false },
+    { label:'7 500', val:18, up:true  },
+    { label:'7 450', val:52, up:true  },
+    { label:'7 400', val:91, up:true  },
+    { label:'7 350', val:67, up:false },
+    { label:'7 300', val:41, up:false },
+    { label:'7 250', val:28, up:false },
   ];
   zones.forEach(z => {
     const row = document.createElement('div');
