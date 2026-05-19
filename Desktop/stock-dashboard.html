@@ -613,7 +613,8 @@
     line-height:1.7; color:var(--muted); margin-bottom:28px;
   }
   .sp-about strong { color:var(--text); }
-  .sp-chart-wrap { position:relative; height:320px; margin-bottom:28px; }
+  .sp-chart-wrap { position:relative; height:320px; margin-bottom:28px; overflow:hidden; }
+  .sp-panel div[style*="height:240px"] { overflow:hidden; }
   .sp-news { display:flex; flex-direction:column; gap:12px; }
   .sp-news-row {
     display:flex; gap:16px; align-items:flex-start;
@@ -1733,8 +1734,8 @@ function openSP(sym) {
         ['Siège',         info.hq],
       ].map(([l,v]) => `<div class="sp-stat"><div class="sp-stat-l">${l}</div><div class="sp-stat-v">${v}</div></div>`).join('')}
     </div>
-    <div style="position:relative;height:240px;">
-      <canvas id="sp-mini-chart"></canvas>
+    <div style="position:relative;height:240px;overflow:hidden;">
+      <canvas id="sp-mini-chart" style="position:absolute;inset:0;"></canvas>
     </div>`;
   drawSPChart('sp-mini-chart', stock.price, up);
 
@@ -1743,7 +1744,7 @@ function openSP(sym) {
     <div style="display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap;" id="sp-tf">
       ${['1J','1S','1M','3M','1A','5A'].map((t,i) => `<button class="tf-btn${i===1?' active':''}" data-tf="${t}" onclick="switchSPChart(this,'${sym}')">${t}</button>`).join('')}
     </div>
-    <div class="sp-chart-wrap"><canvas id="sp-main-chart"></canvas></div>
+    <div class="sp-chart-wrap"><canvas id="sp-main-chart" style="position:absolute;inset:0;"></canvas></div>
     <div class="sp-grid" style="margin-top:20px;">
       ${[['Ouverture',`$${(stock.price*0.993).toFixed(2)}`],['Haut du jour',`$${(stock.price*1.018).toFixed(2)}`],['Bas du jour',`$${(stock.price*0.981).toFixed(2)}`],['Volume moy.',`${s.vol||'—'}M`]].map(([l,v])=>`<div class="sp-stat"><div class="sp-stat-l">${l}</div><div class="sp-stat-v">${v}</div></div>`).join('')}
     </div>`;
@@ -1786,13 +1787,21 @@ function switchTab(id, el) {
 function drawSPChart(canvasId, basePrice, up, pts=60) {
   const canvas = document.getElementById(canvasId);
   if (!canvas) return;
+  // Fixer les dimensions AVANT Chart.js
+  const parent = canvas.parentElement;
+  const W = parent.offsetWidth || 600;
+  const H = parent.offsetHeight || 240;
+  canvas.width  = W;
+  canvas.height = H;
+  canvas.style.width  = W + 'px';
+  canvas.style.height = H + 'px';
   const ctx = canvas.getContext('2d');
-  const data = Array.from({length:pts}, (_,i) => {
-    return parseFloat((basePrice + (Math.random()-.48)*(basePrice*.015)*(i*.1+1)).toFixed(2));
-  });
+  const data = Array.from({length:pts}, (_,i) =>
+    parseFloat((basePrice + (Math.random()-.48)*(basePrice*.015)*(i*.1+1)).toFixed(2))
+  );
   data[data.length-1] = basePrice;
   const color = up ? '#00e676' : '#ff1744';
-  const grad = ctx.createLinearGradient(0,0,0,200);
+  const grad = ctx.createLinearGradient(0,0,0,H);
   grad.addColorStop(0, up?'rgba(0,230,118,.25)':'rgba(255,23,68,.25)');
   grad.addColorStop(1,'rgba(0,0,0,0)');
   const chart = new Chart(ctx, {
@@ -1805,8 +1814,6 @@ function drawSPChart(canvasId, basePrice, up, pts=60) {
       scales:{x:{display:false},y:{position:'right',grid:{color:'rgba(30,45,74,.4)'},ticks:{color:'#64748b',font:{size:10},callback:v=>`$${v.toLocaleString('fr-FR')}`}}}
     }
   });
-  canvas.width  = canvas.parentElement.offsetWidth;
-  canvas.height = canvas.parentElement.offsetHeight || 240;
   if (canvasId === 'sp-main-chart') { if (spChart) spChart.destroy(); spChart = chart; }
 }
 
