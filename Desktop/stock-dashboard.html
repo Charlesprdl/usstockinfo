@@ -1824,7 +1824,7 @@ function switchSPChart(btn, sym) {
   const stock = [...DATA.screener,...DATA.watchlist].find(s=>s.sym===sym);
   if (!stock) return;
   if (spChart) spChart.destroy();
-  drawSPChart('sp-main-chart', stock.price, (stock.pct??stock.chg)>=0, {1J:60,1S:120,1M:180,3M:250,1A:300,5A:400}[btn.dataset.tf]||120);
+  drawSPChart('sp-main-chart', stock.price, (stock.pct??stock.chg)>=0, {'1J':60,'1S':120,'1M':180,'3M':250,'1A':300,'5A':400}[btn.dataset.tf]||120);
 }
 
 // Keyboard ESC ferme la page
