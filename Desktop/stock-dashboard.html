@@ -540,10 +540,11 @@
 
   /* ── Scroll animations ── */
   .fade-in {
-    opacity: 0; transform: translateY(24px);
+    opacity: 1; transform: translateY(0);
     transition: opacity .6s ease, transform .6s ease;
   }
-  .fade-in.visible { opacity: 1; transform: translateY(0); }
+  .fade-in.hidden { opacity: 0; transform: translateY(24px); }
+  .fade-in.hidden.visible { opacity: 1; transform: translateY(0); }
 
   /* ── Footer ── */
   footer {
@@ -1009,7 +1010,7 @@ const DATA = {
 /* ════════════════════════════════════════════════
    TICKER TAPE
    ════════════════════════════════════════════════ */
-(function() {
+try { (function() {
   const track = document.getElementById('ticker');
   const items = [...DATA.ticker, ...DATA.ticker]; // duplicate for seamless loop
   items.forEach(t => {
@@ -1023,7 +1024,7 @@ const DATA = {
     `;
     track.appendChild(el);
   });
-})();
+})(); } catch(e) { console.warn('ticker', e); }
 
 /* ════════════════════════════════════════════════
    INDICES GRID
@@ -1168,13 +1169,15 @@ function drawMainChart(tf = '1W') {
 }
 
 // Timeframe buttons
-document.getElementById('tf-btns').addEventListener('click', e => {
-  const btn = e.target.closest('.tf-btn');
-  if (!btn) return;
-  document.querySelectorAll('.tf-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  drawMainChart(btn.dataset.tf);
-});
+try {
+  document.getElementById('tf-btns').addEventListener('click', e => {
+    const btn = e.target.closest('.tf-btn');
+    if (!btn) return;
+    document.querySelectorAll('.tf-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    drawMainChart(btn.dataset.tf);
+  });
+} catch(e) { console.warn('tf-btns setup', e); }
 
 /* ════════════════════════════════════════════════
    WATCHLIST
@@ -1461,10 +1464,12 @@ function closeModal() {
   document.getElementById('modal').classList.remove('open');
   document.body.style.overflow = '';
 }
-document.getElementById('modal').addEventListener('click', e => {
-  if (e.target === e.currentTarget) closeModal();
-});
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+try {
+  document.getElementById('modal').addEventListener('click', e => {
+    if (e.target === e.currentTarget) closeModal();
+  });
+} catch(e) { console.warn('modal setup', e); }
+document.addEventListener('keydown', e => { if (e.key === 'Escape') { try { closeModal(); } catch(_){} } });
 
 /* ════════════════════════════════════════════════
    SEARCH
@@ -1480,9 +1485,11 @@ function doSearch() {
   renderScreener(filtered.length ? filtered : DATA.screener);
   document.getElementById('screener').scrollIntoView({ behavior: 'smooth' });
 }
-document.getElementById('search-input').addEventListener('keydown', e => {
-  if (e.key === 'Enter') doSearch();
-});
+try {
+  document.getElementById('search-input').addEventListener('keydown', e => {
+    if (e.key === 'Enter') doSearch();
+  });
+} catch(e) { console.warn('search-input setup', e); }
 
 /* ════════════════════════════════════════════════
    LIVE DATA — Yahoo Finance via CORS proxy
@@ -1544,7 +1551,7 @@ async function fetchLiveData() {
   const url = `https://query1.finance.yahoo.com/v7/finance/quote?symbols=${encodeURIComponent(YF_SYMS)}&fields=regularMarketPrice,regularMarketChange,regularMarketChangePercent,regularMarketVolume,marketCap`;
   const json = await fetchWithProxy(url);
 
-  if (!json?.quoteResponse?.result?.length) {
+  if (!json || !json.quoteResponse || !json.quoteResponse.result || !json.quoteResponse.result.length) {
     setRefreshLabel('⚠️ Erreur réseau');
     scheduleNextRefresh();
     return;
@@ -1619,7 +1626,8 @@ function applyLiveData() {
 
   // ── Ticker ──
   document.querySelectorAll('.tick-item').forEach(el => {
-    const sym = el.querySelector('.tick-sym')?.textContent;
+    const symEl = el.querySelector('.tick-sym');
+    const sym = symEl ? symEl.textContent : null;
     const yfSym = sym === 'GOOG' ? 'GOOGL' : (sym === 'SPX' ? '^GSPC' : sym === 'NDX' ? '^IXIC' : sym === 'DJIA' ? '^DJI' : sym === 'VIX' ? '^VIX' : sym === 'TNX' ? '^TNX' : sym);
     const q = quoteCache[yfSym];
     if (!q) return;
@@ -1858,8 +1866,16 @@ function scheduleNextRefresh() {
    ════════════════════════════════════════════════ */
 const io = new IntersectionObserver(entries => {
   entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
-}, { threshold: .1 });
-document.querySelectorAll('.fade-in').forEach(el => io.observe(el));
+}, { threshold: .05 });
+// Add hidden class only when JS runs (so page is visible without JS)
+document.querySelectorAll('.fade-in').forEach(el => {
+  el.classList.add('hidden');
+  io.observe(el);
+});
+// Fail-safe: reveal all after 1.5s in case IntersectionObserver doesn't fire
+setTimeout(() => {
+  document.querySelectorAll('.fade-in.hidden').forEach(el => el.classList.add('visible'));
+}, 1500);
 
 /* ════════════════════════════════════════════════
    MARKET STATUS
@@ -1906,9 +1922,12 @@ document.addEventListener('DOMContentLoaded', () => {
   try { renderNews(); } catch(e) { console.error('renderNews',e); }
   try { updateMarketStatus(); } catch(e) { console.error('updateMarketStatus',e); }
 
-  // Fade in newly added elements
+  // Fade in newly added elements (re-observe after render)
   setTimeout(() => {
-    document.querySelectorAll('.fade-in').forEach(el => io.observe(el));
+    document.querySelectorAll('.fade-in').forEach(el => {
+      if (!el.classList.contains('hidden')) el.classList.add('hidden');
+      io.observe(el);
+    });
   }, 100);
 
   // Fetch immédiat au chargement puis toutes les 15 min
