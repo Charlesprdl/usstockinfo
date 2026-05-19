@@ -553,6 +553,83 @@
     position: relative; z-index: 1;
   }
   footer a { color: var(--accent); margin: 0 8px; }
+
+  /* ── Stock Page ── */
+  #stock-page {
+    position:fixed; inset:0; z-index:300;
+    background:var(--bg); overflow-y:auto;
+    transform:translateX(100%);
+    transition:transform .35s cubic-bezier(.4,0,.2,1);
+    will-change:transform;
+  }
+  #stock-page.open { transform:translateX(0); }
+  .sp-nav {
+    position:sticky; top:0; background:rgba(10,14,26,.9);
+    backdrop-filter:blur(12px); border-bottom:1px solid var(--border);
+    display:flex; align-items:center; gap:16px; padding:16px 32px; z-index:10;
+  }
+  .sp-back {
+    background:var(--bg3); border:1px solid var(--border);
+    color:var(--text); padding:8px 16px; border-radius:8px;
+    cursor:pointer; font-size:13px; font-weight:600;
+    transition:border-color .2s; display:flex; align-items:center; gap:6px;
+  }
+  .sp-back:hover { border-color:var(--accent); color:var(--accent); }
+  .sp-hero {
+    padding:40px 32px 0; display:flex;
+    align-items:flex-start; gap:24px; flex-wrap:wrap;
+  }
+  .sp-logo {
+    width:64px; height:64px; border-radius:16px;
+    display:flex; align-items:center; justify-content:center;
+    font-size:22px; font-weight:900; flex-shrink:0;
+  }
+  .sp-price { font-size:48px; font-weight:900; line-height:1; }
+  .sp-tabs {
+    display:flex; gap:0; border-bottom:1px solid var(--border);
+    margin:32px 32px 0; overflow-x:auto;
+  }
+  .sp-tab {
+    padding:12px 24px; font-size:13px; font-weight:600;
+    color:var(--muted); cursor:pointer; border-bottom:2px solid transparent;
+    transition:all .2s; white-space:nowrap;
+  }
+  .sp-tab.active { color:var(--accent); border-bottom-color:var(--accent); }
+  .sp-panel { display:none; padding:32px; }
+  .sp-panel.active { display:block; }
+  .sp-grid {
+    display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+    gap:12px; margin-bottom:28px;
+  }
+  .sp-stat {
+    background:var(--bg3); border:1px solid var(--border);
+    border-radius:12px; padding:16px;
+  }
+  .sp-stat-l { font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:1px; margin-bottom:6px; }
+  .sp-stat-v { font-size:20px; font-weight:700; }
+  .sp-about {
+    background:var(--bg3); border:1px solid var(--border);
+    border-radius:12px; padding:20px; font-size:14px;
+    line-height:1.7; color:var(--muted); margin-bottom:28px;
+  }
+  .sp-about strong { color:var(--text); }
+  .sp-chart-wrap { position:relative; height:320px; margin-bottom:28px; }
+  .sp-news { display:flex; flex-direction:column; gap:12px; }
+  .sp-news-row {
+    display:flex; gap:16px; align-items:flex-start;
+    padding:16px; background:var(--bg3);
+    border:1px solid var(--border); border-radius:12px;
+    cursor:pointer; transition:border-color .2s;
+  }
+  .sp-news-row:hover { border-color:var(--accent); }
+  .sp-news-emoji { font-size:28px; flex-shrink:0; }
+  .sp-news-title { font-size:14px; font-weight:600; line-height:1.4; margin-bottom:4px; }
+  .sp-news-meta { font-size:12px; color:var(--muted); }
+  .fin-table { width:100%; border-collapse:collapse; font-size:13px; }
+  .fin-table td { padding:12px 16px; border-bottom:1px solid var(--border); }
+  .fin-table tr:last-child td { border-bottom:none; }
+  .fin-table td:first-child { color:var(--muted); }
+  .fin-table td:last-child { font-weight:700; text-align:right; }
 </style>
 </head>
 <body>
@@ -581,6 +658,36 @@
   </div>
 </div>
 
+<!-- Stock Detail Page -->
+<div id="stock-page">
+  <div class="sp-nav">
+    <button class="sp-back" onclick="closeSP()">← Retour</button>
+    <div id="sp-breadcrumb" style="font-size:13px;color:var(--muted)">Dashboard / <span id="sp-bc-sym" style="color:var(--text)">—</span></div>
+    <div style="margin-left:auto;font-size:12px;color:var(--muted)" id="sp-exchange">NYSE · USD</div>
+  </div>
+  <div class="sp-hero">
+    <div class="sp-logo" id="sp-logo"></div>
+    <div>
+      <div style="font-size:13px;color:var(--muted);margin-bottom:4px" id="sp-name">—</div>
+      <div style="display:flex;align-items:baseline;gap:12px;flex-wrap:wrap">
+        <div class="sp-price" id="sp-price">—</div>
+        <div style="font-size:20px;font-weight:700" id="sp-chg">—</div>
+      </div>
+      <div style="font-size:12px;color:var(--muted);margin-top:6px" id="sp-upd">—</div>
+    </div>
+  </div>
+  <div class="sp-tabs">
+    <div class="sp-tab active" onclick="switchTab('overview',this)">Vue d'ensemble</div>
+    <div class="sp-tab" onclick="switchTab('chart',this)">Graphique</div>
+    <div class="sp-tab" onclick="switchTab('financials',this)">Fondamentaux</div>
+    <div class="sp-tab" onclick="switchTab('news',this)">Actualités</div>
+  </div>
+  <div id="tab-overview" class="sp-panel active"></div>
+  <div id="tab-chart"    class="sp-panel"></div>
+  <div id="tab-financials" class="sp-panel"></div>
+  <div id="tab-news"    class="sp-panel"></div>
+</div>
+
 <!-- Ticker Tape -->
 <div class="ticker-wrap">
   <div class="ticker-label">Live</div>
@@ -602,6 +709,10 @@
   <div class="market-status">
     <div class="status-dot"></div>
     <span id="market-status-text">Marché Ouvert · NYSE</span>
+  </div>
+  <div id="refresh-badge" style="font-size:11px;color:var(--muted);display:flex;align-items:center;gap:5px;">
+    <span id="refresh-icon" style="font-size:13px;">🔄</span>
+    <span id="refresh-label">—</span>
   </div>
   <button class="nav-btn">S'inscrire</button>
 </nav>
@@ -935,7 +1046,8 @@ function renderIndices() {
       </div>
       <canvas class="mini-chart" id="mc-${idx.sym}" data-pts='${JSON.stringify(pts)}' data-up="${up}"></canvas>
     `;
-    card.addEventListener('click', () => openModal(idx.sym, idx.name, idx.val, idx.chg, idx.pct, pts));
+    card.dataset.sym = idx.sym;
+    card.addEventListener('click', () => { if(SP_INFO[idx.sym]) openSP(idx.sym); });
     grid.appendChild(card);
   });
 
@@ -1082,12 +1194,12 @@ function renderWatchlist() {
         <div class="wl-name">${s.name}</div>
       </div>
       <canvas class="wl-sparkline" id="ws-${s.sym}" data-pts='${JSON.stringify(pts)}' data-up="${up}"></canvas>
-      <div class="wl-right">
+      <div class="wl-right" data-sym="${s.sym}">
         <div class="wl-price">$${s.price.toFixed(2)}</div>
-        <div class="wl-chg ${up?'up':'down'}" style="color:${up?'var(--green)':'var(--red)'}">${up?'+':''}${s.pct.toFixed(2)}%</div>
+        <div class="wl-chg" style="color:${up?'var(--green)':'var(--red)'}">${up?'+':''}${s.pct.toFixed(2)}%</div>
       </div>
     `;
-    row.addEventListener('click', () => openModal(s.sym, s.name, s.price, s.chg, s.pct, pts));
+    row.addEventListener('click', () => openSP(s.sym));
     addTooltip(row, s.sym, `$${s.price.toFixed(2)}`, `${s.chg>=0?'+':''}${s.pct.toFixed(2)}%`, '—', '—');
     wl.appendChild(row);
   });
@@ -1156,12 +1268,14 @@ function renderHeatmap() {
   DATA.heatmap.forEach(s => {
     const cell = document.createElement('div');
     cell.className = 'hm-cell';
+    cell.dataset.sym = s.sym;
     cell.style.background = chgToColor(s.chg);
     cell.style.border = `1px solid ${s.chg>=0?'rgba(0,230,118,.2)':'rgba(255,23,68,.2)'}`;
     cell.innerHTML = `
       <div class="hm-sym">${s.sym}</div>
       <div class="hm-chg" style="color:${s.chg>=0?'var(--green)':'var(--red)'}">${s.chg>=0?'+':''}${s.chg.toFixed(2)}%</div>
     `;
+    cell.addEventListener('click', () => openSP(s.sym));
     addTooltip(cell, s.sym, '—', `${s.chg>=0?'+':''}${s.chg.toFixed(2)}%`, '—', '—');
     grid.appendChild(cell);
   });
@@ -1198,10 +1312,7 @@ function renderScreener(data = DATA.screener) {
       </td>
       <td style="font-size:12px;color:var(--muted)">${s.range}</td>
     `;
-    tr.addEventListener('click', () => {
-      const pts = Array.from({length:50}, () => s.price + (Math.random()-.5)*s.price*.06);
-      openModal(s.sym, s.name, s.price, s.chg, s.chg, pts, s);
-    });
+    tr.addEventListener('click', () => openSP(s.sym));
     tbody.appendChild(tr);
   });
 }
@@ -1372,38 +1483,360 @@ document.getElementById('search-input').addEventListener('keydown', e => {
 });
 
 /* ════════════════════════════════════════════════
-   LIVE DATA SIMULATION
+   LIVE DATA — Yahoo Finance via CORS proxy
+   Actualisation toutes les 15 minutes
    ════════════════════════════════════════════════ */
-function liveUpdate() {
-  // Jitter watchlist prices
-  document.querySelectorAll('.wl-price').forEach((el, i) => {
-    const s = DATA.watchlist[i];
-    if (!s) return;
-    const delta = (Math.random() - .49) * .3;
-    s.price = Math.max(1, s.price + delta);
-    el.textContent = `$${s.price.toFixed(2)}`;
-    el.style.color = delta > 0 ? 'var(--green)' : 'var(--red)';
-    setTimeout(() => el.style.color = '', 800);
+
+// Correspondance Yahoo Finance → symboles locaux
+const YF_MAP = {
+  'AAPL':  { local:'AAPL',  type:'stock' },
+  'NVDA':  { local:'NVDA',  type:'stock' },
+  'MSFT':  { local:'MSFT',  type:'stock' },
+  'AMZN':  { local:'AMZN',  type:'stock' },
+  'META':  { local:'META',  type:'stock' },
+  'GOOGL': { local:'GOOG',  type:'stock' },
+  'TSLA':  { local:'TSLA',  type:'stock' },
+  'JPM':   { local:'JPM',   type:'stock' },
+  'V':     { local:'V',     type:'stock' },
+  'LLY':   { local:'LLY',   type:'stock' },
+  'WMT':   { local:'WMT',   type:'stock' },
+  'XOM':   { local:'XOM',   type:'stock' },
+  'AMD':   { local:'AMD',   type:'stock' },
+  'AVGO':  { local:'AVGO',  type:'stock' },
+  'TSM':   { local:'TSM',   type:'stock' },
+  'MU':    { local:'MU',    type:'stock' },
+  'ORCL':  { local:'ORCL',  type:'stock' },
+  'GS':    { local:'GS',    type:'stock' },
+  'MA':    { local:'MA',    type:'stock' },
+  'NFLX':  { local:'NFLX',  type:'stock' },
+  '^GSPC': { local:'SPX',   type:'index' },
+  '^IXIC': { local:'NDX',   type:'index' },
+  '^DJI':  { local:'DJIA',  type:'index' },
+  '^RUT':  { local:'RUT',   type:'index' },
+  '^VIX':  { local:'VIX',   type:'index' },
+  '^TNX':  { local:'TNX',   type:'index' },
+};
+
+const YF_SYMS = Object.keys(YF_MAP).join(',');
+const REFRESH_MS = 15 * 60 * 1000; // 15 minutes
+let nextRefresh = Date.now() + REFRESH_MS;
+let quoteCache = {};
+
+// Proxies CORS (essayés dans l'ordre)
+async function fetchWithProxy(url) {
+  const proxies = [
+    `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
+    `https://corsproxy.io/?${encodeURIComponent(url)}`,
+  ];
+  for (const proxy of proxies) {
+    try {
+      const r = await fetch(proxy, { signal: AbortSignal.timeout(8000) });
+      if (r.ok) return await r.json();
+    } catch {}
+  }
+  return null;
+}
+
+async function fetchLiveData() {
+  setRefreshLabel('⏳ Actualisation...');
+  const url = `https://query1.finance.yahoo.com/v7/finance/quote?symbols=${encodeURIComponent(YF_SYMS)}&fields=regularMarketPrice,regularMarketChange,regularMarketChangePercent,regularMarketVolume,marketCap`;
+  const json = await fetchWithProxy(url);
+
+  if (!json?.quoteResponse?.result?.length) {
+    setRefreshLabel('⚠️ Erreur réseau');
+    scheduleNextRefresh();
+    return;
+  }
+
+  // Construire un dictionnaire sym → quote
+  json.quoteResponse.result.forEach(q => {
+    const key = q.symbol;
+    quoteCache[key] = {
+      price: q.regularMarketPrice,
+      chg:   q.regularMarketChange,
+      pct:   q.regularMarketChangePercent,
+      vol:   q.regularMarketVolume,
+      cap:   q.marketCap,
+    };
   });
 
-  // Update ticker
-  document.querySelectorAll('.tick-item').forEach((el, i) => {
-    const s = DATA.ticker[i % DATA.ticker.length];
-    const delta = (Math.random() - .49) * .1;
-    s.chg = parseFloat((s.chg + delta).toFixed(2));
-    const chgEl = el.querySelector('.tick-chg');
+  applyLiveData();
+  document.getElementById('last-update').textContent = new Date().toLocaleTimeString('fr-FR');
+  scheduleNextRefresh();
+}
+
+function applyLiveData() {
+  // ── Watchlist ──
+  document.querySelectorAll('.wl-right[data-sym]').forEach(el => {
+    const sym = el.dataset.sym;
+    const yfSym = sym === 'GOOG' ? 'GOOGL' : sym;
+    const q = quoteCache[yfSym];
+    if (!q) return;
+    const priceEl = el.querySelector('.wl-price');
+    const chgEl   = el.querySelector('.wl-chg');
+    const prev = parseFloat(priceEl.textContent.replace('$',''));
+    priceEl.textContent = `$${q.price.toFixed(2)}`;
+    priceEl.style.color = q.price > prev ? 'var(--green)' : 'var(--red)';
+    setTimeout(() => priceEl.style.color = '', 1200);
+    chgEl.textContent = `${q.pct>=0?'+':''}${q.pct.toFixed(2)}%`;
+    chgEl.style.color = q.pct>=0 ? 'var(--green)' : 'var(--red)';
+    // Mettre à jour DATA
+    const s = DATA.watchlist.find(x => x.sym === sym);
+    if (s) { s.price = q.price; s.chg = q.chg; s.pct = q.pct; }
+  });
+
+  // ── Heatmap ──
+  document.querySelectorAll('.hm-cell[data-sym]').forEach(el => {
+    const sym = el.dataset.sym;
+    const yfSym = sym === 'GOOG' ? 'GOOGL' : sym;
+    const q = quoteCache[yfSym];
+    if (!q) return;
+    el.style.background = chgToColor(q.pct);
+    el.style.borderColor = q.pct>=0 ? 'rgba(0,230,118,.2)' : 'rgba(255,23,68,.2)';
+    el.querySelector('.hm-chg').textContent = `${q.pct>=0?'+':''}${q.pct.toFixed(2)}%`;
+    el.querySelector('.hm-chg').style.color = q.pct>=0 ? 'var(--green)' : 'var(--red)';
+  });
+
+  // ── Indices ──
+  const indexMapping = {SPX:'^GSPC', NDX:'^IXIC', DJIA:'^DJI', RUT:'^RUT', VIX:'^VIX', TNX:'^TNX'};
+  document.querySelectorAll('.index-card[data-sym]').forEach(el => {
+    const sym = el.dataset.sym;
+    const yfSym = indexMapping[sym];
+    const q = quoteCache[yfSym];
+    if (!q) return;
+    const valEl = el.querySelector('.index-value');
+    const chgEl = el.querySelector('.index-chg');
+    if (valEl) valEl.textContent = q.price.toLocaleString('fr-FR', {minimumFractionDigits:2, maximumFractionDigits:3});
     if (chgEl) {
-      chgEl.textContent = `${s.chg>=0?'+':''}${s.chg.toFixed(2)}%`;
-      chgEl.className = `tick-chg ${s.chg>=0?'up':'down'}`;
+      chgEl.textContent = `${q.chg>=0?'+':''}${q.chg.toFixed(2)} (${q.pct>=0?'+':''}${q.pct.toFixed(2)}%)`;
+      chgEl.className = `index-chg ${q.pct>=0?'up':'down'}`;
+    }
+    // VIX stat card
+    if (sym === 'VIX') document.getElementById('stat-vix').textContent = q.price.toFixed(2);
+  });
+
+  // ── Ticker ──
+  document.querySelectorAll('.tick-item').forEach(el => {
+    const sym = el.querySelector('.tick-sym')?.textContent;
+    const yfSym = sym === 'GOOG' ? 'GOOGL' : (sym === 'SPX' ? '^GSPC' : sym === 'NDX' ? '^IXIC' : sym === 'DJIA' ? '^DJI' : sym === 'VIX' ? '^VIX' : sym === 'TNX' ? '^TNX' : sym);
+    const q = quoteCache[yfSym];
+    if (!q) return;
+    const valEl = el.querySelector('.tick-val');
+    const chgEl = el.querySelector('.tick-chg');
+    if (valEl) valEl.textContent = q.price.toLocaleString('fr-FR', {minimumFractionDigits:2, maximumFractionDigits:2});
+    if (chgEl) {
+      chgEl.textContent = `${q.pct>=0?'+':''}${q.pct.toFixed(2)}%`;
+      chgEl.className = `tick-chg ${q.pct>=0?'up':'down'}`;
     }
   });
 
-  // Update timestamp
-  document.getElementById('last-update').textContent = new Date().toLocaleTimeString('fr-FR');
+  // ── Screener ──
+  DATA.screener.forEach(s => {
+    const yfSym = s.sym === 'GOOG' ? 'GOOGL' : s.sym;
+    const q = quoteCache[yfSym];
+    if (!q) return;
+    s.price = q.price;
+    s.chg   = q.pct;
+  });
+  renderScreener();
+}
 
-  // Random stat jitter
-  const vix = parseFloat(document.getElementById('stat-vix').textContent);
-  document.getElementById('stat-vix').textContent = (vix + (Math.random()-.5)*.05).toFixed(2);
+/* ════════════════════════════════════════════════
+   STOCK DETAIL PAGE
+   ════════════════════════════════════════════════ */
+const SP_INFO = {
+  NVDA:{ name:'NVIDIA Corporation',      color:'#76b900', exchange:'NASDAQ', about:'Leader mondial des GPU et puces IA. Ses processeurs H100/B200 équipent les plus grands data centers au monde. Moteur de l\'IA générative, du gaming et de la conduite autonome.', sector:'Technologie', employees:'29 600', founded:'1993', hq:'Santa Clara, CA' },
+  AAPL:{ name:'Apple Inc.',              color:'#00d4ff', exchange:'NASDAQ', about:'Concepteur de l\'iPhone, du Mac et de l\'Apple Watch. Son écosystème de services (App Store, iCloud, Apple TV+) représente plus de 22% du CA. Pionnier du design et de l\'expérience utilisateur.', sector:'Technologie', employees:'161 000', founded:'1976', hq:'Cupertino, CA' },
+  MSFT:{ name:'Microsoft Corporation',   color:'#00a4ef', exchange:'NASDAQ', about:'Éditeur de Windows, Azure et la suite Microsoft 365. Investisseur clé dans OpenAI (ChatGPT). Son cloud Azure est le 2e mondial. Co-pilot intégré dans tous ses produits.', sector:'Technologie', employees:'221 000', founded:'1975', hq:'Redmond, WA' },
+  AMZN:{ name:'Amazon.com Inc.',         color:'#ff9900', exchange:'NASDAQ', about:'Géant du e-commerce et leader mondial du cloud avec AWS (33% du marché). Prime, Alexa, Whole Foods, MGM Studios. AWS représente plus de 60% du bénéfice opérationnel total.', sector:'Technologie', employees:'1 525 000', founded:'1994', hq:'Seattle, WA' },
+  META:{ name:'Meta Platforms Inc.',     color:'#1877f2', exchange:'NASDAQ', about:'Propriétaire de Facebook, Instagram et WhatsApp — 3,2 milliards d\'utilisateurs actifs quotidiens. Investit massivement dans l\'IA publicitaire (LLAMA) et le Metaverse avec Reality Labs.', sector:'Technologie', employees:'67 317', founded:'2004', hq:'Menlo Park, CA' },
+  TSLA:{ name:'Tesla Inc.',             color:'#cc0000', exchange:'NASDAQ', about:'Pionnier du véhicule électrique avec 1,8M de ventes en 2024. Développe l\'autopilot FSD, les batteries Megapack et le robot Optimus. Réseau Supercharger adopté par Ford et GM.', sector:'Automobiles', employees:'140 473', founded:'2003', hq:'Austin, TX' },
+  GOOG:{ name:'Alphabet Inc.',          color:'#4285f4', exchange:'NASDAQ', about:'Propriétaire de Google Search (92% du marché), YouTube, Android et Google Cloud. L\'IA Gemini est intégrée dans tous ses services. Search Ads reste la principale source de revenus.', sector:'Technologie', employees:'181 269', founded:'1998', hq:'Mountain View, CA' },
+  JPM: { name:'JPMorgan Chase & Co.',   color:'#005eb8', exchange:'NYSE',   about:'Plus grande banque américaine avec $4 800 Mds d\'actifs. Services : banque de détail, banque d\'investissement, gestion d\'actifs. Dirigée par Jamie Dimon depuis 2005.', sector:'Finance', employees:'316 043', founded:'1799', hq:'New York, NY' },
+  V:   { name:'Visa Inc.',              color:'#1a1f71', exchange:'NYSE',   about:'1er réseau mondial de paiement électronique. Traite plus de 200 Mds de transactions/an dans 200 pays. Modèle asset-light : Visa ne prête pas d\'argent, elle connecte banques et marchands.', sector:'Finance', employees:'26 500', founded:'1958', hq:'San Francisco, CA' },
+  LLY: { name:'Eli Lilly & Company',   color:'#d52b1e', exchange:'NYSE',   about:'Laboratoire pharmaceutique américain. Leader des traitements contre le diabète (Mounjaro) et l\'obésité (Zepbound/semaglutide). Pipeline en oncologie et Alzheimer très prometteur.', sector:'Santé', employees:'43 000', founded:'1876', hq:'Indianapolis, IN' },
+  WMT: { name:'Walmart Inc.',           color:'#0071ce', exchange:'NYSE',   about:'1er distributeur mondial avec 10 500 magasins dans 20 pays. Walmart+ rivalise avec Amazon Prime. Le e-commerce Walmart croît de +22%/an. Sam\'s Club et Flipkart complètent le groupe.', sector:'Distribution', employees:'2 100 000', founded:'1962', hq:'Bentonville, AR' },
+  XOM: { name:'ExxonMobil Corporation', color:'#ff0000', exchange:'NYSE',   about:'Plus grande compagnie pétrolière américaine. Exploration, raffinage et chimie dans 60 pays. Investit dans le captage de carbone et les biocarburants pour la transition énergétique.', sector:'Énergie', employees:'61 500', founded:'1870', hq:'Spring, TX' },
+  AMD: { name:'Advanced Micro Devices', color:'#ed1c24', exchange:'NASDAQ', about:'Concurrent direct d\'Intel et NVIDIA. Ses CPU EPYC dominent le marché serveur, et ses GPU MI300 attaquent NVIDIA sur l\'IA. Architecture Zen à la base des PlayStation et Xbox.', sector:'Semi-conducteurs', employees:'25 000', founded:'1969', hq:'Santa Clara, CA' },
+  AVGO:{ name:'Broadcom Inc.',          color:'#cc0000', exchange:'NASDAQ', about:'Fournisseur de semi-conducteurs pour réseaux, stockage et accès sans fil. L\'acquisition de VMware (2023, $69Mds) l\'a propulsé dans le cloud d\'entreprise. Client clé : Apple.', sector:'Semi-conducteurs', employees:'40 000', founded:'1961', hq:'San Jose, CA' },
+  TSM: { name:'Taiwan Semiconductor',   color:'#00aaff', exchange:'NYSE',   about:'Fonderie #1 mondiale, fabrique les puces NVIDIA, Apple, AMD, Qualcomm. Contrôle 60% du marché des foundries. Construction d\'usines en Arizona et Japon pour réduire la dépendance à Taiwan.', sector:'Semi-conducteurs', employees:'73 090', founded:'1987', hq:'Hsinchu, Taiwan' },
+  MU:  { name:'Micron Technology',      color:'#0000c0', exchange:'NASDAQ', about:'Fabricant américain de mémoire DRAM et NAND. Ses puces HBM3e équipent les GPU NVIDIA H100/B200 pour l\'IA. Construit une usine $100Mds à New York avec subventions CHIPS Act.', sector:'Semi-conducteurs', employees:'48 000', founded:'1978', hq:'Boise, ID' },
+  ORCL:{ name:'Oracle Corporation',     color:'#f80000', exchange:'NYSE',   about:'Éditeur de bases de données, ERP (NetSuite) et cloud Oracle Cloud Infrastructure. Partenaire clé de Microsoft et TikTok pour héberger leurs données aux USA. Forte croissance IA.', sector:'Technologie', employees:'164 000', founded:'1977', hq:'Austin, TX' },
+  NFLX:{ name:'Netflix Inc.',           color:'#e50914', exchange:'NASDAQ', about:'Leader mondial du streaming avec 270M d\'abonnés. Le tier publicitaire croît rapidement. Producteur de contenus originaux (Squid Game, Stranger Things). Investit dans le jeu vidéo.', sector:'Médias', employees:'13 000', founded:'1997', hq:'Los Gatos, CA' },
+  GS:  { name:'Goldman Sachs Group',    color:'#00aeef', exchange:'NYSE',   about:'Banque d\'investissement de référence à Wall Street. M&A, IPO, trading de matières premières et gestion de fortune. Retour aux fondamentaux après l\'abandon de la banque de détail Marcus.', sector:'Finance', employees:'45 300', founded:'1869', hq:'New York, NY' },
+  MA:  { name:'Mastercard Incorporated',color:'#eb001b', exchange:'NYSE',   about:'2e réseau mondial de paiement. 3,3 milliards de cartes en circulation. Développe des solutions B2B, crypto et paiements transfrontaliers via Mastercard Send et Vocalink.', sector:'Finance', employees:'33 000', founded:'1966', hq:'Purchase, NY' },
+};
+
+const SP_FUNDAMENTALS = {
+  NVDA:{ rev:'$130.5B', netIncome:'$72.9B', margin:'55.9%', roe:'115%',  debt:'$9.0B',  divYield:'0.03%', eps:'$2.94',  beta:'1.66' },
+  AAPL:{ rev:'$391.0B', netIncome:'$101.0B',margin:'25.8%', roe:'164%',  debt:'$97.3B', divYield:'0.45%', eps:'$6.73',  beta:'1.24' },
+  MSFT:{ rev:'$245.1B', netIncome:'$88.1B', margin:'35.9%', roe:'39.8%', debt:'$79.3B', divYield:'0.68%', eps:'$13.44', beta:'0.90' },
+  AMZN:{ rev:'$637.9B', netIncome:'$59.2B', margin:'9.3%',  roe:'22.1%', debt:'$58.3B', divYield:'—',     eps:'$5.53',  beta:'1.33' },
+  META:{ rev:'$164.5B', netIncome:'$62.4B', margin:'37.9%', roe:'40.6%', debt:'$28.8B', divYield:'0.30%', eps:'$23.86', beta:'1.22' },
+  TSLA:{ rev:'$97.7B',  netIncome:'$7.1B',  margin:'7.3%',  roe:'11.7%', debt:'$7.6B',  divYield:'—',     eps:'$2.04',  beta:'2.34' },
+  GOOG:{ rev:'$350.0B', netIncome:'$100.1B',margin:'28.6%', roe:'32.6%', debt:'$13.4B', divYield:'0.42%', eps:'$8.04',  beta:'1.07' },
+  JPM: { rev:'$179.9B', netIncome:'$58.5B', margin:'32.5%', roe:'17.4%', debt:'$462B',  divYield:'1.87%', eps:'$20.08', beta:'1.18' },
+  V:   { rev:'$35.9B',  netIncome:'$19.7B', margin:'54.9%', roe:'50.7%', debt:'$20.5B', divYield:'0.70%', eps:'$10.49', beta:'0.93' },
+  LLY: { rev:'$45.0B',  netIncome:'$10.6B', margin:'23.5%', roe:'107%',  debt:'$22.6B', divYield:'0.61%', eps:'$11.00', beta:'0.43' },
+  WMT: { rev:'$680.0B', netIncome:'$15.5B', margin:'2.3%',  roe:'22.9%', debt:'$49.9B', divYield:'0.94%', eps:'$2.51',  beta:'0.54' },
+  XOM: { rev:'$398.7B', netIncome:'$33.7B', margin:'8.5%',  roe:'14.7%', debt:'$37.5B', divYield:'3.44%', eps:'$8.61',  beta:'0.51' },
+  AMD: { rev:'$25.8B',  netIncome:'$1.6B',  margin:'6.4%',  roe:'2.6%',  debt:'$1.7B',  divYield:'—',     eps:'$0.99',  beta:'1.74' },
+  AVGO:{ rev:'$51.6B',  netIncome:'$5.9B',  margin:'11.4%', roe:'18.9%', debt:'$69.3B', divYield:'1.10%', eps:'$2.44',  beta:'1.22' },
+  TSM: { rev:'$88.3B',  netIncome:'$34.0B', margin:'38.5%', roe:'27.4%', debt:'$29.1B', divYield:'1.16%', eps:'$13.07', beta:'1.44' },
+  MU:  { rev:'$25.1B',  netIncome:'$778M',  margin:'3.1%',  roe:'2.2%',  debt:'$13.3B', divYield:'0.36%', eps:'$0.70',  beta:'1.88' },
+  ORCL:{ rev:'$53.8B',  netIncome:'$10.5B', margin:'19.5%', roe:'—',     debt:'$85.8B', divYield:'1.16%', eps:'$3.80',  beta:'0.87' },
+  NFLX:{ rev:'$39.0B',  netIncome:'$8.7B',  margin:'22.3%', roe:'40.6%', debt:'$14.5B', divYield:'—',     eps:'$19.84', beta:'1.29' },
+  GS:  { rev:'$53.5B',  netIncome:'$14.5B', margin:'27.1%', roe:'12.7%', debt:'$304B',  divYield:'2.09%', eps:'$47.57', beta:'1.42' },
+  MA:  { rev:'$28.2B',  netIncome:'$12.9B', margin:'45.7%', roe:'214%',  debt:'$15.2B', divYield:'0.51%', eps:'$14.14', beta:'1.11' },
+};
+
+let spChart = null;
+let currentSym = null;
+
+function openSP(sym) {
+  const info = SP_INFO[sym];
+  const stock = [...DATA.screener, ...DATA.watchlist].find(s => s.sym === sym);
+  if (!info || !stock) return;
+  currentSym = sym;
+  const up = stock.chg >= 0 || stock.pct >= 0;
+  const pct = stock.pct ?? stock.chg;
+
+  // Header
+  document.getElementById('sp-logo').textContent = sym.slice(0,2);
+  document.getElementById('sp-logo').style.cssText = `background:${info.color}22;color:${info.color};width:64px;height:64px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:900;flex-shrink:0;`;
+  document.getElementById('sp-name').textContent = info.name;
+  document.getElementById('sp-bc-sym').textContent = sym;
+  document.getElementById('sp-exchange').textContent = `${info.exchange} · USD`;
+  document.getElementById('sp-price').textContent = `$${stock.price.toFixed(2)}`;
+  const chgEl = document.getElementById('sp-chg');
+  chgEl.textContent = `${up?'+':''}${(stock.chg??stock.pct).toFixed(2)} (${up?'+':''}${pct.toFixed(2)}%)`;
+  chgEl.style.color = up ? 'var(--green)' : 'var(--red)';
+  document.getElementById('sp-upd').textContent = `Dernière MAJ : ${new Date().toLocaleTimeString('fr-FR')} · ${info.hq}`;
+
+  // Reset tabs
+  switchTab('overview', document.querySelector('.sp-tab'));
+
+  // Overview tab
+  const s = DATA.screener.find(x => x.sym === sym) || {};
+  const f = SP_FUNDAMENTALS[sym] || {};
+  document.getElementById('tab-overview').innerHTML = `
+    <div class="sp-about"><strong>${info.name}</strong> — ${info.about}</div>
+    <div class="sp-grid">
+      ${[
+        ['Prix',          `$${stock.price.toFixed(2)}`],
+        ['Capitalisation',`$${s.cap||'—'}`],
+        ['Secteur',       info.sector],
+        ['P/E Ratio',     s.pe||'—'],
+        ['Range 52S',     s.range||'—'],
+        ['Employés',      info.employees],
+        ['Fondée en',     info.founded],
+        ['Siège',         info.hq],
+      ].map(([l,v]) => `<div class="sp-stat"><div class="sp-stat-l">${l}</div><div class="sp-stat-v">${v}</div></div>`).join('')}
+    </div>
+    <div style="position:relative;height:240px;">
+      <canvas id="sp-mini-chart"></canvas>
+    </div>`;
+  drawSPChart('sp-mini-chart', stock.price, up);
+
+  // Chart tab
+  document.getElementById('tab-chart').innerHTML = `
+    <div style="display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap;" id="sp-tf">
+      ${['1J','1S','1M','3M','1A','5A'].map((t,i) => `<button class="tf-btn${i===1?' active':''}" data-tf="${t}" onclick="switchSPChart(this,'${sym}')">${t}</button>`).join('')}
+    </div>
+    <div class="sp-chart-wrap"><canvas id="sp-main-chart"></canvas></div>
+    <div class="sp-grid" style="margin-top:20px;">
+      ${[['Ouverture',`$${(stock.price*0.993).toFixed(2)}`],['Haut du jour',`$${(stock.price*1.018).toFixed(2)}`],['Bas du jour',`$${(stock.price*0.981).toFixed(2)}`],['Volume moy.',`${s.vol||'—'}M`]].map(([l,v])=>`<div class="sp-stat"><div class="sp-stat-l">${l}</div><div class="sp-stat-v">${v}</div></div>`).join('')}
+    </div>`;
+  drawSPChart('sp-main-chart', stock.price, up, 120);
+
+  // Financials tab
+  document.getElementById('tab-financials').innerHTML = f.rev ? `
+    <table class="fin-table">
+      ${[['Chiffre d\'affaires',f.rev],['Bénéfice net',f.netIncome],['Marge nette',f.margin],['ROE',f.roe],['Dette totale',f.debt],['Rendement dividende',f.divYield],['BPA (EPS)',f.eps],['Bêta',f.beta]].map(([l,v])=>`<tr><td>${l}</td><td>${v}</td></tr>`).join('')}
+    </table>` : '<p style="color:var(--muted);padding:20px">Données non disponibles.</p>';
+
+  // News tab
+  const relNews = DATA.news.slice(0,3);
+  document.getElementById('tab-news').innerHTML = `<div class="sp-news">${relNews.map(n=>`
+    <div class="sp-news-row">
+      <div class="sp-news-emoji">${n.emoji}</div>
+      <div>
+        <div class="sp-news-title">${n.title}</div>
+        <div class="sp-news-meta">${n.tag} · ${n.time}</div>
+      </div>
+    </div>`).join('')}</div>`;
+
+  document.getElementById('stock-page').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeSP() {
+  document.getElementById('stock-page').classList.remove('open');
+  document.body.style.overflow = '';
+  if (spChart) { spChart.destroy(); spChart = null; }
+}
+
+function switchTab(id, el) {
+  document.querySelectorAll('.sp-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.sp-panel').forEach(p => p.classList.remove('active'));
+  if (el) el.classList.add('active');
+  document.getElementById('tab-'+id).classList.add('active');
+}
+
+function drawSPChart(canvasId, basePrice, up, pts=60) {
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const data = Array.from({length:pts}, (_,i) => {
+    return parseFloat((basePrice + (Math.random()-.48)*(basePrice*.015)*(i*.1+1)).toFixed(2));
+  });
+  data[data.length-1] = basePrice;
+  const color = up ? '#00e676' : '#ff1744';
+  const grad = ctx.createLinearGradient(0,0,0,200);
+  grad.addColorStop(0, up?'rgba(0,230,118,.25)':'rgba(255,23,68,.25)');
+  grad.addColorStop(1,'rgba(0,0,0,0)');
+  const chart = new Chart(ctx, {
+    type:'line',
+    data:{ labels:data.map((_,i)=>i), datasets:[{ data, borderColor:color, borderWidth:2, backgroundColor:grad, fill:true, tension:.4, pointRadius:0 }] },
+    options:{
+      responsive:false, maintainAspectRatio:false,
+      animation:{duration:600},
+      plugins:{legend:{display:false},tooltip:{enabled:false}},
+      scales:{x:{display:false},y:{position:'right',grid:{color:'rgba(30,45,74,.4)'},ticks:{color:'#64748b',font:{size:10},callback:v=>`$${v.toLocaleString('fr-FR')}`}}}
+    }
+  });
+  canvas.width  = canvas.parentElement.offsetWidth;
+  canvas.height = canvas.parentElement.offsetHeight || 240;
+  if (canvasId === 'sp-main-chart') { if (spChart) spChart.destroy(); spChart = chart; }
+}
+
+function switchSPChart(btn, sym) {
+  document.querySelectorAll('#sp-tf .tf-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const stock = [...DATA.screener,...DATA.watchlist].find(s=>s.sym===sym);
+  if (!stock) return;
+  if (spChart) spChart.destroy();
+  drawSPChart('sp-main-chart', stock.price, (stock.pct??stock.chg)>=0, {1J:60,1S:120,1M:180,3M:250,1A:300,5A:400}[btn.dataset.tf]||120);
+}
+
+// Keyboard ESC ferme la page
+document.addEventListener('keydown', e => { if (e.key==='Escape') closeSP(); });
+
+function setRefreshLabel(txt) {
+  const el = document.getElementById('refresh-label');
+  if (el) el.textContent = txt;
+}
+
+let countdownTimer = null;
+function scheduleNextRefresh() {
+  nextRefresh = Date.now() + REFRESH_MS;
+  if (countdownTimer) clearInterval(countdownTimer);
+  countdownTimer = setInterval(() => {
+    const secs = Math.max(0, Math.round((nextRefresh - Date.now()) / 1000));
+    const m = Math.floor(secs / 60), s = secs % 60;
+    setRefreshLabel(`Refresh dans ${m}:${String(s).padStart(2,'0')}`);
+    if (secs === 0) { clearInterval(countdownTimer); fetchLiveData(); }
+  }, 1000);
 }
 
 /* ════════════════════════════════════════════════
@@ -1464,7 +1897,8 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.fade-in').forEach(el => io.observe(el));
   }, 100);
 
-  setInterval(liveUpdate, 8000);
+  // Fetch immédiat au chargement puis toutes les 15 min
+  fetchLiveData();
   setInterval(updateMarketStatus, 60000);
 
   // Loader out
