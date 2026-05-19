@@ -1701,7 +1701,7 @@ function openSP(sym) {
   if (!info || !stock) return;
   currentSym = sym;
   const up = stock.chg >= 0 || stock.pct >= 0;
-  const pct = stock.pct ?? stock.chg;
+  const pct = stock.pct !== undefined ? stock.pct : stock.chg;
 
   // Header
   document.getElementById('sp-logo').textContent = sym.slice(0,2);
@@ -1711,7 +1711,8 @@ function openSP(sym) {
   document.getElementById('sp-exchange').textContent = `${info.exchange} · USD`;
   document.getElementById('sp-price').textContent = `$${stock.price.toFixed(2)}`;
   const chgEl = document.getElementById('sp-chg');
-  chgEl.textContent = `${up?'+':''}${(stock.chg??stock.pct).toFixed(2)} (${up?'+':''}${pct.toFixed(2)}%)`;
+  const chgVal = stock.chg !== undefined ? stock.chg : stock.pct;
+  chgEl.textContent = (up?'+':'') + chgVal.toFixed(2) + ' (' + (up?'+':'') + pct.toFixed(2) + '%)';
   chgEl.style.color = up ? 'var(--green)' : 'var(--red)';
   document.getElementById('sp-upd').textContent = `Dernière MAJ : ${new Date().toLocaleTimeString('fr-FR')} · ${info.hq}`;
 
@@ -1821,10 +1822,15 @@ function drawSPChart(canvasId, basePrice, up, pts=60) {
 function switchSPChart(btn, sym) {
   document.querySelectorAll('#sp-tf .tf-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
-  const stock = [...DATA.screener,...DATA.watchlist].find(s=>s.sym===sym);
+  const stock = [...DATA.screener,...DATA.watchlist].find(s => s.sym === sym);
   if (!stock) return;
+  const ptsMap = {J1:60,S1:120,M1:180,M3:250,A1:300,A5:400};
+  const tf = btn.dataset.tf || '1S';
+  const key = tf.slice(1) + tf.slice(0,1);
+  const pts = ptsMap[key] || 120;
+  const up = (stock.pct !== undefined ? stock.pct : stock.chg) >= 0;
   if (spChart) spChart.destroy();
-  drawSPChart('sp-main-chart', stock.price, (stock.pct??stock.chg)>=0, {'1J':60,'1S':120,'1M':180,'3M':250,'1A':300,'5A':400}[btn.dataset.tf]||120);
+  drawSPChart('sp-main-chart', stock.price, up, pts);
 }
 
 // Keyboard ESC ferme la page
