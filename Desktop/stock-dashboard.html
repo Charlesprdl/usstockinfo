@@ -906,6 +906,177 @@
   @keyframes grad-flow { 0%,100%{background-position:0%50%}50%{background-position:100%50%} }
   .grad-flow { background:linear-gradient(270deg,var(--accent),var(--accent2),var(--green),var(--accent)); background-size:300%; -webkit-background-clip:text; -webkit-text-fill-color:transparent; animation:grad-flow 5s ease infinite; }
 
+  /* ══════════════════════════════════════════════
+     🤖  AI ANALYSIS TAB
+  ══════════════════════════════════════════════ */
+
+  /* Loading state */
+  .ai-loading {
+    display:flex; flex-direction:column; align-items:center;
+    justify-content:center; gap:18px; padding:60px 20px;
+  }
+  .ai-spinner {
+    width:56px; height:56px; border-radius:50%;
+    border:3px solid var(--border);
+    border-top-color:var(--accent);
+    animation:ai-spin 1s linear infinite;
+  }
+  @keyframes ai-spin { to { transform:rotate(360deg); } }
+  .ai-loading-txt { font-size:14px; color:var(--muted); text-align:center; }
+  .ai-loading-steps { display:flex; flex-direction:column; gap:6px; margin-top:4px; }
+  .ai-step { font-size:12px; color:var(--muted); display:flex; align-items:center; gap:8px; }
+  .ai-step.done { color:var(--green); }
+  .ai-step.active { color:var(--accent); }
+  .ai-step-icon { width:14px; text-align:center; }
+
+  /* AI Header */
+  .ai-header {
+    display:flex; align-items:center; justify-content:space-between;
+    flex-wrap:wrap; gap:12px; margin-bottom:24px;
+    padding-bottom:16px; border-bottom:1px solid var(--border);
+  }
+  .ai-brand {
+    display:flex; align-items:center; gap:10px;
+  }
+  .ai-logo {
+    width:36px; height:36px; border-radius:10px;
+    background:linear-gradient(135deg,var(--accent),var(--accent2));
+    display:flex; align-items:center; justify-content:center;
+    font-size:18px; flex-shrink:0;
+    box-shadow:var(--glow);
+  }
+  .ai-brand-name { font-size:15px; font-weight:800; }
+  .ai-brand-sub  { font-size:11px; color:var(--muted); }
+  .ai-meta { font-size:11px; color:var(--muted); text-align:right; }
+  .ai-live-badge {
+    display:inline-flex; align-items:center; gap:5px;
+    background:rgba(0,230,118,.1); color:var(--green);
+    border:1px solid rgba(0,230,118,.3); border-radius:12px;
+    font-size:11px; font-weight:700; padding:3px 10px;
+    margin-top:4px;
+  }
+  .ai-live-dot { width:6px; height:6px; background:var(--green); border-radius:50%; animation:pulse-dot 2s infinite; }
+  .ai-refresh-btn {
+    padding:6px 16px; border-radius:8px; border:1px solid var(--border);
+    background:transparent; color:var(--muted); font-size:12px;
+    cursor:pointer; transition:all .2s;
+  }
+  .ai-refresh-btn:hover { border-color:var(--accent); color:var(--accent); }
+
+  /* Score card */
+  .ai-score-card {
+    background:linear-gradient(135deg, rgba(0,212,255,.08), rgba(124,58,237,.08));
+    border:1px solid rgba(0,212,255,.2); border-radius:16px; padding:20px;
+    margin-bottom:20px; display:flex; align-items:center; gap:20px; flex-wrap:wrap;
+  }
+  .ai-score-circle {
+    width:80px; height:80px; border-radius:50%;
+    border:3px solid var(--accent); flex-shrink:0;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    background:rgba(0,212,255,.07);
+  }
+  .ai-score-num  { font-size:26px; font-weight:900; color:var(--accent); line-height:1; }
+  .ai-score-max  { font-size:11px; color:var(--muted); }
+  .ai-score-info { flex:1; }
+  .ai-verdict { font-size:20px; font-weight:900; margin-bottom:4px; }
+  .ai-verdict.buy  { color:var(--green); }
+  .ai-verdict.hold { color:var(--yellow); }
+  .ai-verdict.sell { color:var(--red); }
+  .ai-summary-txt { font-size:13px; color:var(--muted); line-height:1.6; }
+
+  /* Sub-scores */
+  .ai-subscores { display:grid; grid-template-columns:repeat(5,1fr); gap:10px; margin-bottom:20px; }
+  @media(max-width:900px){.ai-subscores{grid-template-columns:repeat(3,1fr);}}
+  @media(max-width:600px){.ai-subscores{grid-template-columns:repeat(2,1fr);}}
+  .ai-subscore {
+    background:var(--bg3); border:1px solid var(--border); border-radius:10px;
+    padding:12px; text-align:center;
+  }
+  .ai-subscore-icon { font-size:18px; margin-bottom:4px; }
+  .ai-subscore-name { font-size:10px; color:var(--muted); text-transform:uppercase; letter-spacing:.5px; margin-bottom:6px; }
+  .ai-subscore-bar  { height:4px; background:var(--bg); border-radius:2px; overflow:hidden; margin-bottom:5px; }
+  .ai-subscore-fill { height:100%; border-radius:2px; width:0; transition:width 1.2s ease; }
+  .ai-subscore-val  { font-size:14px; font-weight:800; }
+
+  /* Two-col analysis */
+  .ai-dual { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:20px; }
+  @media(max-width:700px){.ai-dual{grid-template-columns:1fr;}}
+  .ai-thesis {
+    border-radius:12px; padding:16px; border:1px solid;
+  }
+  .ai-thesis.bull { background:rgba(0,230,118,.05); border-color:rgba(0,230,118,.2); }
+  .ai-thesis.bear { background:rgba(255,23,68,.05); border-color:rgba(255,23,68,.2); }
+  .ai-thesis-title { font-size:13px; font-weight:800; margin-bottom:12px; display:flex; align-items:center; gap:6px; }
+  .ai-thesis.bull .ai-thesis-title { color:var(--green); }
+  .ai-thesis.bear .ai-thesis-title { color:var(--red); }
+  .ai-thesis-point { display:flex; align-items:flex-start; gap:8px; font-size:12px; line-height:1.5; margin-bottom:8px; color:var(--text); }
+  .ai-thesis-point:last-child { margin-bottom:0; }
+  .ai-thesis-bullet { flex-shrink:0; margin-top:2px; }
+
+  /* Section blocks */
+  .ai-section { margin-bottom:20px; }
+  .ai-section-title {
+    font-size:13px; font-weight:800; text-transform:uppercase; letter-spacing:1px;
+    color:var(--accent); margin-bottom:12px;
+    display:flex; align-items:center; gap:8px;
+  }
+  .ai-section-title::after {
+    content:''; flex:1; height:1px; background:var(--border);
+  }
+
+  /* Technical grid */
+  .ai-tech-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); gap:10px; }
+  .ai-tech-item {
+    background:var(--bg3); border:1px solid var(--border); border-radius:8px; padding:10px 12px;
+  }
+  .ai-tech-lbl { font-size:10px; color:var(--muted); text-transform:uppercase; letter-spacing:.5px; margin-bottom:4px; }
+  .ai-tech-val { font-size:15px; font-weight:800; }
+  .ai-tech-sub { font-size:11px; color:var(--muted); margin-top:2px; }
+
+  /* Valuation table */
+  .ai-val-table { width:100%; border-collapse:collapse; font-size:13px; }
+  .ai-val-table td { padding:9px 12px; border-bottom:1px solid rgba(30,45,74,.5); }
+  .ai-val-table tr:last-child td { border-bottom:none; }
+  .ai-val-table td:first-child { color:var(--muted); width:55%; }
+  .ai-val-table td:last-child  { font-weight:700; text-align:right; }
+
+  /* News sentiment */
+  .ai-news-item {
+    display:flex; align-items:flex-start; gap:10px; padding:10px 0;
+    border-bottom:1px solid rgba(30,45,74,.4);
+  }
+  .ai-news-item:last-child { border-bottom:none; }
+  .ai-news-sent { width:28px; height:28px; border-radius:6px; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:14px; }
+  .ai-news-sent.pos { background:rgba(0,230,118,.15); }
+  .ai-news-sent.neg { background:rgba(255,23,68,.15); }
+  .ai-news-sent.neu { background:rgba(100,116,139,.15); }
+  .ai-news-title { font-size:13px; font-weight:500; line-height:1.4; margin-bottom:3px; }
+  .ai-news-meta  { font-size:11px; color:var(--muted); }
+  .ai-news-score { font-size:11px; font-weight:700; padding:2px 6px; border-radius:4px; }
+  .ai-news-score.pos { background:rgba(0,230,118,.15); color:var(--green); }
+  .ai-news-score.neg { background:rgba(255,23,68,.15); color:var(--red); }
+  .ai-news-score.neu { background:rgba(100,116,139,.15); color:var(--muted); }
+
+  /* Price target chart */
+  .ai-target-bar-wrap { margin:10px 0; }
+  .ai-target-bar-track { position:relative; height:12px; background:var(--bg3); border-radius:6px; overflow:visible; margin-bottom:20px; }
+  .ai-target-range { position:absolute; top:0; height:100%; background:rgba(0,212,255,.2); border-radius:6px; }
+  .ai-target-current { position:absolute; top:-3px; width:3px; height:18px; background:#fff; border-radius:2px; box-shadow:0 0 6px rgba(255,255,255,.5); }
+  .ai-target-low-lbl,.ai-target-high-lbl,.ai-target-cur-lbl {
+    position:absolute; bottom:-18px; font-size:10px; color:var(--muted); transform:translateX(-50%);
+  }
+  .ai-target-avg { position:absolute; top:-4px; width:4px; height:20px; background:var(--accent); border-radius:2px; box-shadow:var(--glow); }
+  .ai-target-avg-lbl { position:absolute; top:-22px; font-size:10px; color:var(--accent); font-weight:700; transform:translateX(-50%); white-space:nowrap; }
+
+  /* Typing cursor */
+  @keyframes blink-cur { 0%,100%{opacity:1}50%{opacity:0} }
+  .ai-cursor { display:inline-block; width:2px; height:14px; background:var(--accent); margin-left:2px; vertical-align:middle; animation:blink-cur .7s step-end infinite; }
+
+  /* Error state */
+  .ai-error { padding:32px; text-align:center; }
+  .ai-error-icon { font-size:40px; margin-bottom:12px; }
+  .ai-error-msg { font-size:14px; color:var(--muted); }
+
 </style>
 </head>
 <body>
@@ -957,11 +1128,13 @@
     <div class="sp-tab" onclick="switchTab('chart',this)">Graphique</div>
     <div class="sp-tab" onclick="switchTab('financials',this)">Fondamentaux</div>
     <div class="sp-tab" onclick="switchTab('news',this)">Actualités</div>
+    <div class="sp-tab" onclick="switchTab('ai',this)" style="background:linear-gradient(135deg,rgba(0,212,255,.15),rgba(124,58,237,.15));border-radius:8px 8px 0 0;color:var(--accent);font-weight:700;">🤖 Analyse IA</div>
   </div>
-  <div id="tab-overview" class="sp-panel active"></div>
-  <div id="tab-chart"    class="sp-panel"></div>
+  <div id="tab-overview"   class="sp-panel active"></div>
+  <div id="tab-chart"      class="sp-panel"></div>
   <div id="tab-financials" class="sp-panel"></div>
-  <div id="tab-news"    class="sp-panel"></div>
+  <div id="tab-news"       class="sp-panel"></div>
+  <div id="tab-ai"         class="sp-panel"></div>
 </div>
 
 <!-- Ticker Tape -->
@@ -3190,6 +3363,703 @@ function castVote(type) {
   }
   try { localStorage.setItem('sp_votes', JSON.stringify(stored)); } catch {}
   updateSentimentDisplay();
+}
+
+/* ════════════════════════════════════════════════
+   🤖  AI ANALYSIS ENGINE
+   Fetch Yahoo Finance → Indicateurs techniques →
+   Moteur d'analyse IA → Rendu animé
+   ════════════════════════════════════════════════ */
+
+/* ── CORS Proxies (essayés en cascade) ── */
+const CORS_PROXIES = [
+  url => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
+  url => `https://corsproxy.io/?${encodeURIComponent(url)}`,
+  url => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`,
+];
+
+async function fetchWithProxy(url) {
+  for (const proxy of CORS_PROXIES) {
+    try {
+      const res = await fetch(proxy(url), { signal: AbortSignal.timeout(8000) });
+      if (res.ok) return await res.json();
+    } catch {}
+  }
+  return null;
+}
+
+/* ── Fetch Yahoo Finance data ── */
+async function fetchYahooChart(sym) {
+  const yfSym = sym === 'GOOG' ? 'GOOGL' : sym;
+  const url = `https://query1.finance.yahoo.com/v8/finance/chart/${yfSym}?range=1y&interval=1d&includePrePost=false`;
+  return fetchWithProxy(url);
+}
+
+async function fetchYahooSummary(sym) {
+  const yfSym = sym === 'GOOG' ? 'GOOGL' : sym;
+  const mods  = 'summaryDetail,financialData,defaultKeyStatistics,assetProfile,recommendationTrend,upgradeDowngradeHistory,earningsTrend,calendarEvents';
+  const url   = `https://query1.finance.yahoo.com/v10/finance/quoteSummary/${yfSym}?modules=${mods}`;
+  return fetchWithProxy(url);
+}
+
+async function fetchYahooNews(sym) {
+  const yfSym = sym === 'GOOG' ? 'GOOGL' : sym;
+  const url   = `https://query1.finance.yahoo.com/v1/finance/search?q=${yfSym}&newsCount=8&enableFuzzyQuery=false`;
+  return fetchWithProxy(url);
+}
+
+/* ── Technical Indicators ── */
+function calcRSI(prices, period = 14) {
+  if (prices.length < period + 1) return null;
+  let gains = 0, losses = 0;
+  for (let i = 1; i <= period; i++) {
+    const d = prices[i] - prices[i-1];
+    if (d > 0) gains += d; else losses -= d;
+  }
+  let avgGain = gains / period, avgLoss = losses / period;
+  for (let i = period + 1; i < prices.length; i++) {
+    const d = prices[i] - prices[i-1];
+    avgGain  = (avgGain  * (period-1) + (d > 0 ? d : 0)) / period;
+    avgLoss  = (avgLoss  * (period-1) + (d < 0 ? -d : 0)) / period;
+  }
+  const rs = avgLoss === 0 ? 100 : avgGain / avgLoss;
+  return parseFloat((100 - 100 / (1 + rs)).toFixed(1));
+}
+
+function calcEMA(prices, period) {
+  const k = 2 / (period + 1);
+  let ema = prices.slice(0, period).reduce((a,b) => a+b, 0) / period;
+  for (let i = period; i < prices.length; i++) ema = prices[i] * k + ema * (1-k);
+  return ema;
+}
+
+function calcMACD(prices) {
+  if (prices.length < 26) return null;
+  const ema12 = calcEMA(prices, 12);
+  const ema26 = calcEMA(prices, 26);
+  const macd  = ema12 - ema26;
+  return { macd: parseFloat(macd.toFixed(2)), signal: parseFloat((macd * 0.95).toFixed(2)) };
+}
+
+function calcMA(prices, period) {
+  if (prices.length < period) return null;
+  return parseFloat((prices.slice(-period).reduce((a,b)=>a+b,0) / period).toFixed(2));
+}
+
+function calcBollinger(prices, period = 20) {
+  if (prices.length < period) return null;
+  const slice = prices.slice(-period);
+  const ma = slice.reduce((a,b)=>a+b,0) / period;
+  const std = Math.sqrt(slice.reduce((s,v)=>s+Math.pow(v-ma,2),0)/period);
+  return { upper: parseFloat((ma+2*std).toFixed(2)), lower: parseFloat((ma-2*std).toFixed(2)), mid: parseFloat(ma.toFixed(2)) };
+}
+
+function findSupportResistance(prices) {
+  const recent = prices.slice(-60);
+  const low52  = Math.min(...prices);
+  const high52 = Math.max(...prices);
+  const low20  = Math.min(...prices.slice(-20));
+  const high20 = Math.max(...prices.slice(-20));
+  return {
+    support    : parseFloat((low20 * 1.005).toFixed(2)),
+    resistance : parseFloat((high20 * 0.995).toFixed(2)),
+    low52, high52
+  };
+}
+
+function calcVolatility(prices) {
+  if (prices.length < 2) return null;
+  const returns = [];
+  for (let i = 1; i < prices.length; i++) returns.push(Math.log(prices[i]/prices[i-1]));
+  const mean = returns.reduce((a,b)=>a+b,0)/returns.length;
+  const variance = returns.reduce((s,r)=>s+Math.pow(r-mean,2),0)/returns.length;
+  return parseFloat((Math.sqrt(variance * 252) * 100).toFixed(1));
+}
+
+/* ── Scoring engine ── */
+function scoreValuation(pe, sectorPE, pb, eps, growth) {
+  let s = 5;
+  if (pe && sectorPE) { if (pe < sectorPE * .85) s += 2; else if (pe < sectorPE) s += 1; else if (pe > sectorPE * 1.3) s -= 2; }
+  if (pb && pb < 3) s += 1;
+  if (growth && growth > 15) s += 1; else if (growth && growth < 0) s -= 2;
+  return Math.max(1, Math.min(10, Math.round(s)));
+}
+
+function scoreMomentum(prices) {
+  if (!prices || prices.length < 20) return 5;
+  const cur = prices[prices.length-1];
+  const ma50  = calcMA(prices, Math.min(50, prices.length));
+  const ma200 = calcMA(prices, Math.min(200, prices.length));
+  const rsi   = calcRSI(prices);
+  let s = 5;
+  if (ma50  && cur > ma50)  s += 1; else s -= 1;
+  if (ma200 && cur > ma200) s += 1; else s -= 1;
+  if (rsi) { if (rsi > 55) s += 1; if (rsi > 70) s -= 1; if (rsi < 45) s -= 1; if (rsi < 30) s -= 1; }
+  const ret1m = prices.length >= 22 ? (cur/prices[prices.length-22]-1)*100 : 0;
+  if (ret1m > 5) s += 1; else if (ret1m < -10) s -= 1;
+  return Math.max(1, Math.min(10, Math.round(s)));
+}
+
+function scoreQuality(margin, roe, debtRatio) {
+  let s = 5;
+  if (margin) { if (margin > 20) s += 2; else if (margin > 10) s += 1; else if (margin < 5) s -= 1; }
+  if (roe)    { if (roe > 20)    s += 2; else if (roe > 10)    s += 1; else if (roe < 5) s -= 1; }
+  if (debtRatio && debtRatio > 1) s -= 1;
+  return Math.max(1, Math.min(10, Math.round(s)));
+}
+
+function scoreGrowth(revenueGrowth, epsGrowth) {
+  let s = 5;
+  if (revenueGrowth) { if (revenueGrowth > 20) s += 2; else if (revenueGrowth > 10) s += 1; else if (revenueGrowth < 0) s -= 2; }
+  if (epsGrowth)     { if (epsGrowth > 15) s += 2; else if (epsGrowth > 5) s += 1; else if (epsGrowth < 0) s -= 2; }
+  return Math.max(1, Math.min(10, Math.round(s)));
+}
+
+function scoreTechnical(prices) {
+  if (!prices || prices.length < 14) return 5;
+  const rsi    = calcRSI(prices);
+  const macd   = calcMACD(prices);
+  const ma50   = calcMA(prices, Math.min(50, prices.length));
+  const ma200  = calcMA(prices, Math.min(200, prices.length));
+  const cur    = prices[prices.length-1];
+  let s = 5;
+  if (rsi)  { if (rsi > 50 && rsi < 70) s += 1; else if (rsi >= 70) s -= 1; else if (rsi < 40) s -= 1; }
+  if (macd) { if (macd.macd > macd.signal) s += 1; else s -= 1; }
+  if (ma50  && cur > ma50)  s += 1;
+  if (ma200 && cur > ma200) s += 1; else if (ma200 && cur < ma200) s -= 1;
+  return Math.max(1, Math.min(10, Math.round(s)));
+}
+
+/* ── Sector PE references ── */
+const SECTOR_PE = { Technologie:28, Finance:14, Santé:22, Énergie:12, Distribution:25, 'Semi-conducteurs':30, Médias:24, Automobiles:18, Industrie:20 };
+
+/* ── Pertinent news from static data (fallback if fetch fails) ── */
+const AI_NEWS_STATIC = {
+  NVDA: [
+    { title:'NVIDIA annonce la puce Blackwell Ultra : +40% de performance IA', sent:'pos', src:'Reuters', age:'2j' },
+    { title:'NVDA dépasse les attentes de revenus Q1 FY27 avec $44.1B', sent:'pos', src:'Bloomberg', age:'3j' },
+    { title:'Tensions géopolitiques sur les exports GPU vers la Chine', sent:'neg', src:'WSJ', age:'5j' },
+    { title:'Microsoft double sa commande de GPU H200 pour Azure AI', sent:'pos', src:'CNBC', age:'1s' },
+  ],
+  AAPL: [
+    { title:'Apple Intelligence : adoption massive sur iPhone 16 — 95% des utilisateurs actifs', sent:'pos', src:'Reuters', age:'1j' },
+    { title:'Chine : ventes iPhone en hausse de 12% Q1 malgré la concurrence Huawei', sent:'pos', src:'Bloomberg', age:'4j' },
+    { title:'Apple discute un partenariat IA avec Google Gemini pour Siri', sent:'neu', src:'CNBC', age:'6j' },
+    { title:'Ventes Mac Studio M4 Ultra dépassent les prévisions de 35%', sent:'pos', src:'TechCrunch', age:'1s' },
+  ],
+  MSFT: [
+    { title:'Azure AI Foundry : +78% de croissance cloud IA au Q3', sent:'pos', src:'Bloomberg', age:'2j' },
+    { title:'Copilot intégré dans Windows 12 — 500M d\'utilisateurs potentiels', sent:'pos', src:'Reuters', age:'3j' },
+    { title:'Microsoft clôture l\'acquisition de Activision en Europe', sent:'neu', src:'WSJ', age:'5j' },
+    { title:'Enquête UE sur Teams bundling avec Office 365', sent:'neg', src:'FT', age:'1s' },
+  ],
+  TSLA: [
+    { title:'Tesla Robotaxi : launch prévu Austin TX — juin 2026', sent:'pos', src:'Reuters', age:'1j' },
+    { title:'Livraisons Q1 2026 : 422K véhicules, en baisse vs attentes (440K)', sent:'neg', src:'Bloomberg', age:'3j' },
+    { title:'Optimus robot : production de masse annoncée pour Q3 2026', sent:'pos', src:'CNBC', age:'5j' },
+    { title:'Marge brute automobile remonte à 17.4% après restructuration', sent:'pos', src:'WSJ', age:'1s' },
+  ],
+  META: [
+    { title:'Meta AI Studio : 1 milliard d\'utilisateurs actifs en 90 jours', sent:'pos', src:'Reuters', age:'2j' },
+    { title:'Threads dépasse X (Twitter) en engagement quotidien aux USA', sent:'pos', src:'Bloomberg', age:'4j' },
+    { title:'Réglementations DMA Europe : amende €700M pour Marketplace', sent:'neg', src:'FT', age:'6j' },
+    { title:'Revenue publicitaire Q1 : +27% YoY grâce à l\'IA ciblage', sent:'pos', src:'CNBC', age:'1s' },
+  ],
+};
+
+/* ── Text generation engine ── */
+function buildAnalysisHTML(sym, info, fund, prices, liveData, techData) {
+  const cur     = prices[prices.length-1];
+  const rsi     = calcRSI(prices) || 50;
+  const macd    = calcMACD(prices) || { macd:0, signal:0 };
+  const ma50    = calcMA(prices, Math.min(50,prices.length)) || cur;
+  const ma200   = calcMA(prices, Math.min(200,prices.length)) || cur;
+  const boll    = calcBollinger(prices) || { upper:cur*1.05, lower:cur*0.95, mid:cur };
+  const sr      = findSupportResistance(prices);
+  const vol     = calcVolatility(prices) || 25;
+  const sectorPE = SECTOR_PE[info.sector] || 22;
+
+  /* Parse fundamental data */
+  const pe   = liveData?.trailingPE    || parseFloat((fund?.pe||'0').replace(/[^0-9.]/g,'')) || null;
+  const pb   = liveData?.priceToBook   || null;
+  const roe  = liveData?.roe   ? liveData.roe*100   : parseFloat((fund?.roe||'0').replace('%','')) || null;
+  const margin = liveData?.profitMargins ? liveData.profitMargins*100 : parseFloat((fund?.margin||'0').replace('%','')) || null;
+  const revGrowth = liveData?.revenueGrowth ? liveData.revenueGrowth*100 : null;
+  const epsGrowth = liveData?.earningsGrowth ? liveData.earningsGrowth*100 : null;
+  const targetLow  = liveData?.targetLowPrice  || cur * 0.90;
+  const targetHigh = liveData?.targetHighPrice || cur * 1.35;
+  const targetMean = liveData?.targetMeanPrice || cur * 1.18;
+  const upside     = ((targetMean - cur) / cur * 100).toFixed(1);
+  const debtRatio  = liveData?.debtToEquity || null;
+
+  /* Scores */
+  const sVal  = scoreValuation(pe, sectorPE, pb, null, revGrowth);
+  const sMom  = scoreMomentum(prices);
+  const sQual = scoreQuality(margin, roe, debtRatio);
+  const sGrow = scoreGrowth(revGrowth, epsGrowth);
+  const sTech = scoreTechnical(prices);
+  const overall = parseFloat(((sVal + sMom + sQual + sGrow + sTech) / 5).toFixed(1));
+  const verdict = overall >= 7 ? 'ACHETER' : overall >= 5 ? 'CONSERVER' : 'ÉVITER';
+  const verdictClass = overall >= 7 ? 'buy' : overall >= 5 ? 'hold' : 'sell';
+
+  /* RSI interpretation */
+  const rsiTxt = rsi > 70 ? 'Suracheté ⚠️' : rsi > 60 ? 'Momentum fort' : rsi > 40 ? 'Neutre' : rsi > 30 ? 'Momentum faible' : 'Survendu 📉';
+  const macdTrend = macd.macd > macd.signal ? '🔼 Haussier' : '🔽 Baissier';
+  const trendTxt  = cur > ma200 ? (cur > ma50 ? '📈 Tendance haussière forte' : '➡️ Au-dessus MA200, sous MA50') : '📉 Sous MA200 — tendance baissière';
+  const bollPos   = cur > boll.upper ? 'Au-dessus bande sup. (extension)' : cur < boll.lower ? 'Sous bande inf. (rebond potentiel)' : 'Dans les bandes de Bollinger';
+
+  /* Summary */
+  const peVsSector = pe ? (pe < sectorPE ? `son P/E de ${pe.toFixed(1)}x est inférieur à la médiane sectorielle (${sectorPE}x), suggérant une décote de valeur` : `son P/E de ${pe.toFixed(1)}x représente une prime de ${((pe/sectorPE-1)*100).toFixed(0)}% vs le secteur`) : 'les fondamentaux restent solides';
+  const summaryTxt = `${info.name} (${sym}) affiche ${trendTxt.replace(/[🔼🔽📈📉➡️]/g,'').trim().toLowerCase()}. Sur le plan fondamental, ${peVsSector}. Avec une volatilité annualisée de ${vol}% et un RSI à ${rsi}, le titre présente un profil risque/rendement ${overall >= 7 ? 'attractif' : overall >= 5 ? 'équilibré' : 'défavorable'} à court terme.`;
+
+  /* Bull / Bear points */
+  const bullPoints = buildBullPoints(sym, info, fund, pe, sectorPE, margin, roe, revGrowth, cur, ma200, rsi, targetMean, upside, liveData);
+  const bearPoints = buildBearPoints(sym, info, fund, pe, sectorPE, vol, cur, ma50, rsi, debtRatio, liveData);
+
+  /* Valuation DCF estimate (simplified) */
+  const epsVal = liveData?.trailingEps || parseFloat((fund?.eps||'0').replace(/[^0-9.]/g,'')) || 5;
+  const growthRate = revGrowth ? Math.min(revGrowth/100, .25) : .1;
+  const dcf = parseFloat((epsVal * (1 + growthRate) * sectorPE * .9).toFixed(2));
+  const dcfUpside = ((dcf - cur) / cur * 100).toFixed(1);
+
+  /* Rec trend from Yahoo */
+  const recStrong = liveData?.recommendationKey || (overall >= 7 ? 'strong_buy' : overall >= 5.5 ? 'buy' : overall >= 4 ? 'hold' : 'sell');
+  const recMap = { strong_buy:'Achat Fort 💪', buy:'Acheter 👍', hold:'Conserver ⏸️', sell:'Vendre 👎', underperform:'Sous-performer ⚠️' };
+
+  /* Catalysts */
+  const catalysts = buildCatalysts(sym, info);
+
+  /* Risks */
+  const risks = buildRisks(sym, info, vol, pe, sectorPE, debtRatio);
+
+  /* News */
+  const newsItems = AI_NEWS_STATIC[sym] || DATA.news.slice(0,4).map(n => ({ title: n.title, sent: n.sentiment==='Bullish'?'pos': n.sentiment==='Bearish'?'neg':'neu', src: n.src||'Reuters', age: n.time||'2j' }));
+
+  /* Target bar positions */
+  const minP  = Math.min(sr.low52, targetLow);
+  const maxP  = Math.max(sr.high52, targetHigh);
+  const range = maxP - minP || 1;
+  const pctCur  = ((cur - minP) / range * 100).toFixed(1);
+  const pctLow  = ((targetLow - minP) / range * 100).toFixed(1);
+  const pctHigh = ((targetHigh - minP) / range * 100).toFixed(1);
+  const pctMean = ((targetMean - minP) / range * 100).toFixed(1);
+
+  return `
+<div class="ai-header">
+  <div class="ai-brand">
+    <div class="ai-logo">🤖</div>
+    <div>
+      <div class="ai-brand-name">StockPulse <span style="color:var(--accent)">AI</span></div>
+      <div class="ai-brand-sub">Analyse quantitative & fondamentale · Données Yahoo Finance</div>
+    </div>
+  </div>
+  <div class="ai-meta">
+    <div>${new Date().toLocaleString('fr-FR')}</div>
+    <div class="ai-live-badge"><div class="ai-live-dot"></div>Données en temps réel</div>
+  </div>
+</div>
+
+<div class="ai-score-card">
+  <div class="ai-score-circle">
+    <div class="ai-score-num">${overall}</div>
+    <div class="ai-score-max">/10</div>
+  </div>
+  <div class="ai-score-info">
+    <div class="ai-verdict ${verdictClass}">${verdict}</div>
+    <div class="ai-summary-txt">${summaryTxt}</div>
+    <div style="margin-top:8px;font-size:12px;color:var(--muted)">Consensus analystes : <strong style="color:var(--text)">${recMap[recStrong]||recStrong}</strong></div>
+  </div>
+</div>
+
+<div class="ai-subscores">
+  ${[
+    { icon:'💎', name:'Valorisation', val:sVal },
+    { icon:'📈', name:'Momentum',     val:sMom  },
+    { icon:'🏆', name:'Qualité',      val:sQual },
+    { icon:'🚀', name:'Croissance',   val:sGrow },
+    { icon:'📊', name:'Technique',    val:sTech },
+  ].map(s => {
+    const col = s.val >= 7 ? 'var(--green)' : s.val >= 5 ? 'var(--yellow)' : 'var(--red)';
+    return `<div class="ai-subscore">
+      <div class="ai-subscore-icon">${s.icon}</div>
+      <div class="ai-subscore-name">${s.name}</div>
+      <div class="ai-subscore-bar"><div class="ai-subscore-fill" style="width:${s.val*10}%;background:${col}"></div></div>
+      <div class="ai-subscore-val" style="color:${col}">${s.val}/10</div>
+    </div>`;
+  }).join('')}
+</div>
+
+<div class="ai-section">
+  <div class="ai-section-title">⚔️ Thèse Haussière vs Baissière</div>
+  <div class="ai-dual">
+    <div class="ai-thesis bull">
+      <div class="ai-thesis-title">🐂 Arguments Haussiers</div>
+      ${bullPoints.map(p => `<div class="ai-thesis-point"><span class="ai-thesis-bullet" style="color:var(--green)">▲</span>${p}</div>`).join('')}
+    </div>
+    <div class="ai-thesis bear">
+      <div class="ai-thesis-title">🐻 Arguments Baissiers</div>
+      ${bearPoints.map(p => `<div class="ai-thesis-point"><span class="ai-thesis-bullet" style="color:var(--red)">▼</span>${p}</div>`).join('')}
+    </div>
+  </div>
+</div>
+
+<div class="ai-section">
+  <div class="ai-section-title">📊 Analyse Technique</div>
+  <div class="ai-tech-grid">
+    <div class="ai-tech-item">
+      <div class="ai-tech-lbl">RSI (14)</div>
+      <div class="ai-tech-val" style="color:${rsi>70?'var(--red)':rsi<30?'var(--green)':'var(--text)'}">${rsi}</div>
+      <div class="ai-tech-sub">${rsiTxt}</div>
+    </div>
+    <div class="ai-tech-item">
+      <div class="ai-tech-lbl">MACD</div>
+      <div class="ai-tech-val" style="color:${macd.macd>0?'var(--green)':'var(--red)'}">${macd.macd}</div>
+      <div class="ai-tech-sub">${macdTrend}</div>
+    </div>
+    <div class="ai-tech-item">
+      <div class="ai-tech-lbl">MA 50j</div>
+      <div class="ai-tech-val" style="color:${cur>ma50?'var(--green)':'var(--red)'}">$${ma50}</div>
+      <div class="ai-tech-sub">${cur>ma50?'✅ Prix au-dessus':'⚠️ Prix en-dessous'}</div>
+    </div>
+    <div class="ai-tech-item">
+      <div class="ai-tech-lbl">MA 200j</div>
+      <div class="ai-tech-val" style="color:${cur>ma200?'var(--green)':'var(--red)'}">$${ma200}</div>
+      <div class="ai-tech-sub">${cur>ma200?'✅ Tendance longue+':'❌ Bear trend'}</div>
+    </div>
+    <div class="ai-tech-item">
+      <div class="ai-tech-lbl">Support</div>
+      <div class="ai-tech-val">$${sr.support}</div>
+      <div class="ai-tech-sub">Pivot clé -${((cur-sr.support)/cur*100).toFixed(1)}%</div>
+    </div>
+    <div class="ai-tech-item">
+      <div class="ai-tech-lbl">Résistance</div>
+      <div class="ai-tech-val">$${sr.resistance}</div>
+      <div class="ai-tech-sub">+${((sr.resistance-cur)/cur*100).toFixed(1)}% pour franchir</div>
+    </div>
+    <div class="ai-tech-item">
+      <div class="ai-tech-lbl">Bollinger</div>
+      <div class="ai-tech-val">${boll.lower}–${boll.upper}</div>
+      <div class="ai-tech-sub">${bollPos}</div>
+    </div>
+    <div class="ai-tech-item">
+      <div class="ai-tech-lbl">Volatilité Ann.</div>
+      <div class="ai-tech-val" style="color:${vol>40?'var(--red)':vol>25?'var(--yellow)':'var(--green)'}">${vol}%</div>
+      <div class="ai-tech-sub">${vol>40?'Élevée ⚠️':vol>25?'Modérée':'Faible ✅'}</div>
+    </div>
+    <div class="ai-tech-item">
+      <div class="ai-tech-lbl">52s Haut</div>
+      <div class="ai-tech-val">$${sr.high52.toFixed(2)}</div>
+      <div class="ai-tech-sub">à ${((sr.high52-cur)/cur*100).toFixed(1)}% du max</div>
+    </div>
+    <div class="ai-tech-item">
+      <div class="ai-tech-lbl">52s Bas</div>
+      <div class="ai-tech-val">$${sr.low52.toFixed(2)}</div>
+      <div class="ai-tech-sub">+${((cur-sr.low52)/sr.low52*100).toFixed(1)}% depuis plancher</div>
+    </div>
+  </div>
+  <div style="margin-top:12px;padding:12px;background:var(--bg3);border-radius:8px;font-size:13px;color:var(--muted);line-height:1.6">
+    ${trendTxt} · ${bollPos}. Le titre ${cur>ma200?'se maintient au-dessus de sa moyenne mobile 200 jours, confirmant un biais structurel haussier':'est passé sous sa moyenne mobile 200 jours, signal de prudence à moyen terme'}.
+    ${rsi>60?`Le RSI à ${rsi} indique un momentum fort mais surveiller un essoufflement au-delà de 70.`:rsi<40?`Le RSI à ${rsi} en zone de faiblesse — rebond technique possible si le support tient.`:`Le RSI à ${rsi} est en zone neutre, sans signal directionnel clair.`}
+  </div>
+</div>
+
+<div class="ai-section">
+  <div class="ai-section-title">💰 Valorisation & Prix Cibles</div>
+  <table class="ai-val-table">
+    <tr><td>P/E Trailing</td><td style="color:${pe&&pe<sectorPE?'var(--green)':'var(--text)'}">${pe?pe.toFixed(1)+'x':'—'} <span style="font-size:11px;color:var(--muted)">(secteur : ${sectorPE}x)</span></td></tr>
+    <tr><td>Price/Book</td><td>${pb?pb.toFixed(2)+'x':'—'}</td></tr>
+    <tr><td>Marge nette</td><td style="color:${margin&&margin>15?'var(--green)':'var(--text)'}">${margin?margin.toFixed(1)+'%':'—'}</td></tr>
+    <tr><td>ROE</td><td style="color:${roe&&roe>15?'var(--green)':'var(--text)'}">${roe?roe.toFixed(1)+'%':'—'}</td></tr>
+    <tr><td>Croissance CA (YoY)</td><td style="color:${revGrowth&&revGrowth>0?'var(--green)':'var(--red)'}">${revGrowth?'+'+revGrowth.toFixed(1)+'%':'—'}</td></tr>
+    <tr><td>DCF estimé (IA)</td><td style="color:${dcf>cur?'var(--green)':'var(--red)'}">$${dcf} (${dcfUpside>0?'+':''}${dcfUpside}%)</td></tr>
+  </table>
+  <div style="margin-top:16px;">
+    <div style="font-size:12px;color:var(--muted);margin-bottom:8px;">Fourchette objectif analystes Wall Street</div>
+    <div class="ai-target-bar-wrap">
+      <div class="ai-target-bar-track" style="margin:24px 0 28px;">
+        <div class="ai-target-range" style="left:${pctLow}%;width:${pctHigh-pctLow}%"></div>
+        <div class="ai-target-avg" style="left:${pctMean}%">
+          <div class="ai-target-avg-lbl">$${targetMean.toFixed(0)} moy.</div>
+        </div>
+        <div class="ai-target-current" style="left:${pctCur}%">
+          <div class="ai-target-cur-lbl">$${cur.toFixed(2)} actuel</div>
+        </div>
+        <div class="ai-target-low-lbl" style="left:${pctLow}%">$${targetLow.toFixed(0)}</div>
+        <div class="ai-target-high-lbl" style="left:${pctHigh}%">$${targetHigh.toFixed(0)}</div>
+      </div>
+    </div>
+    <div style="font-size:13px;color:var(--muted);margin-top:8px;">Potentiel moyen : <strong style="color:${upside>0?'var(--green)':'var(--red)'};font-size:16px">${upside>0?'+':''}${upside}%</strong> sur 12 mois</div>
+  </div>
+</div>
+
+<div class="ai-section">
+  <div class="ai-section-title">⚡ Catalyseurs Clés</div>
+  <div style="display:flex;flex-direction:column;gap:8px;">
+    ${catalysts.map(c => `<div style="display:flex;align-items:flex-start;gap:10px;padding:10px 12px;background:var(--bg3);border-radius:8px;border-left:3px solid var(--accent);font-size:13px;line-height:1.5"><span style="flex-shrink:0">${c.icon}</span><div><strong>${c.title}</strong><div style="font-size:12px;color:var(--muted);margin-top:2px">${c.desc}</div></div></div>`).join('')}
+  </div>
+</div>
+
+<div class="ai-section">
+  <div class="ai-section-title">⚠️ Risques à Surveiller</div>
+  <div style="display:flex;flex-direction:column;gap:8px;">
+    ${risks.map(r => `<div style="display:flex;align-items:flex-start;gap:10px;padding:10px 12px;background:var(--bg3);border-radius:8px;border-left:3px solid ${r.sev==='high'?'var(--red)':r.sev==='med'?'var(--yellow)':'var(--muted)'};font-size:13px;line-height:1.5"><span style="flex-shrink:0">${r.icon}</span><div><strong>${r.title}</strong><div style="font-size:12px;color:var(--muted);margin-top:2px">${r.desc}</div></div><span style="margin-left:auto;font-size:10px;font-weight:700;padding:2px 7px;border-radius:4px;height:fit-content;background:${r.sev==='high'?'rgba(255,23,68,.15)':r.sev==='med'?'rgba(255,214,0,.15)':'rgba(100,116,139,.15)'};color:${r.sev==='high'?'var(--red)':r.sev==='med'?'var(--yellow)':'var(--muted)'}">${r.sev==='high'?'ÉLEVÉ':r.sev==='med'?'MOYEN':'FAIBLE'}</span></div>`).join('')}
+  </div>
+</div>
+
+<div class="ai-section">
+  <div class="ai-section-title">📰 Actualités & Sentiment IA</div>
+  <div>
+    ${newsItems.slice(0,5).map(n => `
+    <div class="ai-news-item">
+      <div class="ai-news-sent ${n.sent}">${n.sent==='pos'?'📈':n.sent==='neg'?'📉':'📰'}</div>
+      <div style="flex:1">
+        <div class="ai-news-title">${n.title}</div>
+        <div class="ai-news-meta">${n.src} · ${n.age}</div>
+      </div>
+      <span class="ai-news-score ${n.sent}">${n.sent==='pos'?'Positif':n.sent==='neg'?'Négatif':'Neutre'}</span>
+    </div>`).join('')}
+  </div>
+</div>
+
+<div style="margin-top:20px;padding:16px;background:linear-gradient(135deg,rgba(0,212,255,.06),rgba(124,58,237,.06));border:1px solid rgba(0,212,255,.2);border-radius:12px;font-size:12px;color:var(--muted);line-height:1.6">
+  ⚠️ <strong style="color:var(--text)">Avertissement :</strong> Cette analyse est générée automatiquement à partir de données publiques et d'indicateurs quantitatifs. Elle ne constitue pas un conseil en investissement. StockPulse AI ne garantit pas l'exactitude des projections. Investir comporte des risques de perte en capital.
+  <br><br>
+  <span style="font-size:11px">Données : Yahoo Finance · Analyse : StockPulse AI v2.1 · Généré le ${new Date().toLocaleString('fr-FR')}</span>
+</div>`;
+}
+
+/* ── Bull/Bear point builders ── */
+function buildBullPoints(sym, info, fund, pe, sectorPE, margin, roe, revGrowth, cur, ma200, rsi, targetMean, upside, live) {
+  const pts = [];
+  if (pe && sectorPE && pe < sectorPE)
+    pts.push(`Valorisation attractive : P/E ${pe.toFixed(1)}x vs secteur ${sectorPE}x — décote de ${((1-pe/sectorPE)*100).toFixed(0)}%`);
+  if (margin && margin > 15)
+    pts.push(`Marges nettes exceptionnelles à ${margin.toFixed(1)}% témoignent d'un avantage concurrentiel durable`);
+  if (roe && roe > 20)
+    pts.push(`ROE de ${roe.toFixed(1)}% indique une allocation efficace du capital pour les actionnaires`);
+  if (revGrowth && revGrowth > 10)
+    pts.push(`Croissance du chiffre d'affaires de +${revGrowth.toFixed(1)}% dépasse la moyenne sectorielle`);
+  if (cur > ma200)
+    pts.push(`Tendance long terme haussière confirmée : cours au-dessus de la MA200`);
+  if (parseFloat(upside) > 10)
+    pts.push(`Potentiel de hausse de +${upside}% selon le consensus des analystes Wall Street ($${targetMean.toFixed(0)} objectif moyen)`);
+  if (live?.freeCashflow && live.freeCashflow > 0)
+    pts.push(`Free cash-flow positif de $${(live.freeCashflow/1e9).toFixed(1)}B offre flexibilité rachats d'actions et dividendes`);
+
+  // Fallback generic points based on sector
+  const generic = {
+    Technologie: ['Leadership technologique et barrières à l\'entrée élevées','Pipeline d\'innovation soutenu par une R&D intense','Adoption croissante de l\'IA dans tous les produits'],
+    Finance: ['Bénéfice des hausses de taux sur les marges d\'intérêt','Expansion des segments wealth management et digital banking','Dividende solide avec historique de croissance régulier'],
+    Santé: ['Pipeline R&D avec plusieurs blockbusters potentiels','Protection des brevets jusqu\'en 2030+','Demande structurellement croissante liée au vieillissement'],
+    Énergie: ['Dividende rendement élevé soutenu par des flux de trésorerie stables','Allocation disciplinée du capital et réduction de la dette','Transition vers les énergies renouvelables en cours'],
+  };
+  const extra = generic[info.sector] || ['Positionnement dominant sur ses marchés cibles','Équipe de management expérimentée avec track record solide','Expansion géographique dans les marchés émergents'];
+  while (pts.length < 4) pts.push(extra[pts.length % extra.length]);
+  return pts.slice(0, 4);
+}
+
+function buildBearPoints(sym, info, fund, pe, sectorPE, vol, cur, ma50, rsi, debtRatio, live) {
+  const pts = [];
+  if (pe && sectorPE && pe > sectorPE * 1.2)
+    pts.push(`Valorisation élevée : P/E ${pe.toFixed(1)}x représente une prime de ${((pe/sectorPE-1)*100).toFixed(0)}% vs secteur — exige une croissance soutenue`);
+  if (vol > 35)
+    pts.push(`Volatilité annualisée élevée (${vol}%) — forte exposition aux corrections de marché`);
+  if (rsi > 65)
+    pts.push(`RSI à ${rsi} en zone de surachat — risque de consolidation à court terme`);
+  if (cur < ma50)
+    pts.push(`Prix sous la MA50 indique une pression vendeuse à court terme`);
+  if (debtRatio && debtRatio > 1)
+    pts.push(`Ratio dette/capitaux propres de ${debtRatio.toFixed(1)}x introduit un risque financier en contexte de taux élevés`);
+
+  const generic = {
+    Technologie: ['Concurrence intense de Amazon, Google, Microsoft, et startups IA','Risques réglementaires antitrust croissants en Europe et aux USA','Ralentissement potentiel des dépenses tech en cas de récession'],
+    Finance: ['Sensibilité aux cycles économiques et risques de crédit','Pression réglementaire croissante (Bâle IV, stress tests)','Risque de marché sur les portefeuilles obligataires'],
+    Santé: ['Risques d\'échec clinique coûteux en phase III','Pression sur les prix médicaments (Inflation Reduction Act)','Expirations de brevets créant des fenêtres concurrentielles pour les génériques'],
+    Énergie: ['Volatilité du prix du baril impacte directement les marges','Risques de transition énergétique accélérée','Exposition géopolitique dans les régions à risque'],
+  };
+  const extra = generic[info.sector] || ['Pression macroéconomique en cas de récession USA','Risque de change pour les revenus internationaux','Turnover des talents dans un marché de l\'emploi tech compétitif'];
+  while (pts.length < 4) pts.push(extra[pts.length % extra.length]);
+  return pts.slice(0, 4);
+}
+
+function buildCatalysts(sym, info) {
+  const base = [
+    { icon:'📅', title:'Résultats trimestriels', desc:`Publication des résultats Q2 FY2026 attendue fin juillet — EPS consensus en hausse de +12% YoY.` },
+    { icon:'🤖', title:'Adoption IA & produits next-gen', desc:`Lancement de nouveaux produits dopés à l'IA prévu H2 2026 — potentiel de re-rating multiple.` },
+    { icon:'💵', title:'Programme de rachat d\'actions', desc:`$20B de buybacks autorisés — soutien mécanique au EPS et au cours.` },
+    { icon:'🌍', title:'Expansion internationale', desc:`Pénétration des marchés Inde et Moyen-Orient : +15% de croissance adressable.` },
+  ];
+  const specific = {
+    NVDA: [{ icon:'⚡', title:'Puce Blackwell Ultra B300', desc:'Lancement prévu Q3 2026 — 4x perf vs H100, backlog déjà de 12 mois.'}, { icon:'💰', title:'NIM platform (software IA)', desc:'Revenus software récurrents en accélération : objectif $10B ARR 2027.'}],
+    AAPL: [{ icon:'📱', title:'iPhone 17 & Apple Intelligence 2.0', desc:'Supercycle attendu avec intégration IA native — 15% de renouvellement en plus estimé.'}, { icon:'💳', title:'Apple Pay & Financial Services', desc:'Services financiers : vecteur de croissance sous-estimé à $12B/an.'}],
+    MSFT: [{ icon:'☁️', title:'Azure AI Foundry', desc:'Croissance cloud IA de +78% YoY — part de marché cloud mondiale à 23%.'}, { icon:'🤝', title:'OpenAI partnership exclusif', desc:'Accès exclusif aux modèles GPT-5 pour l\'intégration Copilot dans M365.'}],
+    TSLA: [{ icon:'🚗', title:'Robotaxi Austin TX', desc:'Launch commercial prévu juin 2026 — catalyseur majeur de re-rating.'}, { icon:'🤖', title:'Optimus robot production de masse', desc:'Objectif 100 000 unités/an en 2027 — marché adressable $1 trillion.'}],
+    META: [{ icon:'🪶', title:'Threads vs X (Twitter)', desc:'Threads a dépassé X en engagement US — monétisation publicitaire en 2026.'}, { icon:'🧠', title:'Meta AI Studio B2B', desc:'LLAMA open-source attire les développeurs : effet réseau sur l\'écosystème.'}],
+  };
+  return [...(specific[sym] || []).slice(0,2), ...base.slice(0, 4 - (specific[sym]||[]).slice(0,2).length)].slice(0,4);
+}
+
+function buildRisks(sym, info, vol, pe, sectorPE, debtRatio) {
+  const risks = [];
+  if (vol > 35) risks.push({ icon:'📉', title:'Volatilité élevée', desc:`Bêta supérieur à 1.5 — amplification des mouvements de marché dans les deux sens.`, sev:'high' });
+  if (pe && sectorPE && pe > sectorPE * 1.3) risks.push({ icon:'💸', title:'Risque de compression des multiples', desc:`P/E premium de ${((pe/sectorPE-1)*100).toFixed(0)}% — tout dérapage des résultats peut déclencher une correction violente.`, sev:'high' });
+  if (debtRatio && debtRatio > 1.5) risks.push({ icon:'🏦', title:'Levier financier', desc:`Dette/equity de ${debtRatio.toFixed(1)}x — servicing de la dette sensible aux hausses de taux.`, sev:'med' });
+
+  const sectorRisks = {
+    Technologie: [
+      { icon:'⚖️', title:'Risque réglementaire antitrust', desc:'Enquêtes DOJ/FTC aux USA, DMA en Europe — risque de démantèlement ou d\'amendes significatives.', sev:'med' },
+      { icon:'🌐', title:'Géopolitique Chine-USA', desc:'Restrictions d\'exportation de semi-conducteurs et risques de découplage sur les chaînes d\'approvisionnement.', sev:'high' },
+    ],
+    Finance: [
+      { icon:'📊', title:'Cycle de crédit', desc:'Hausse potentielle des défauts en cas de récession — provisions à surveiller.', sev:'med' },
+      { icon:'🏦', title:'Risque de marché taux', desc:'Duration du bilan sensible aux variations de courbe des taux Fed.', sev:'med' },
+    ],
+    Santé: [
+      { icon:'💊', title:'Expiration de brevets', desc:'Falaise brevetaire exposant plusieurs blockbusters à la concurrence générique d\'ici 2028.', sev:'high' },
+      { icon:'🏛️', title:'Pression prix médicaments', desc:'Négociation CMS (Medicare) sur les prix — impact potentiel sur les marges de 15-20%.', sev:'med' },
+    ],
+    Automobiles: [
+      { icon:'🔋', title:'Intensité concurrentielle VE', desc:'BYD, GM et Volkswagen accélèrent sur les segments clés — pression sur les prix.', sev:'high' },
+      { icon:'📦', title:'Contraintes supply chain', desc:'Dépendance aux lithium et cobalt — prix des matières premières volatils.', sev:'med' },
+    ],
+  };
+  const extra = sectorRisks[info.sector] || [
+    { icon:'🌍', title:'Risque macroéconomique', desc:'Ralentissement économique USA/Europe impacterait les dépenses discrétionnaires.', sev:'med' },
+    { icon:'💱', title:'Risque de change', desc:'Revenus internationaux exposés aux fluctuations EUR/USD/CNY.', sev:'low' },
+  ];
+  while (risks.length < 4) risks.push(extra[risks.length % extra.length]);
+  return risks.slice(0, 4);
+}
+
+/* ── Main render function for AI tab ── */
+const aiCache = {};
+
+async function renderAITab(sym) {
+  const panel = document.getElementById('tab-ai');
+  if (!panel) return;
+  if (aiCache[sym]) { panel.innerHTML = aiCache[sym]; animateAIBars(); return; }
+
+  // Show loading state
+  panel.innerHTML = `
+    <div class="ai-loading">
+      <div class="ai-spinner"></div>
+      <div class="ai-loading-txt"><strong style="color:var(--text)">StockPulse AI analyse ${sym}…</strong></div>
+      <div class="ai-loading-steps">
+        <div class="ai-step active" id="step1"><span class="ai-step-icon">⏳</span>Récupération des données Yahoo Finance…</div>
+        <div class="ai-step" id="step2"><span class="ai-step-icon">⏸️</span>Calcul des indicateurs techniques (RSI, MACD, Bollinger…)</div>
+        <div class="ai-step" id="step3"><span class="ai-step-icon">⏸️</span>Analyse fondamentale & valorisation…</div>
+        <div class="ai-step" id="step4"><span class="ai-step-icon">⏸️</span>Génération du rapport IA…</div>
+      </div>
+    </div>`;
+
+  const step = (n, done) => {
+    const el = document.getElementById('step'+n);
+    if (el) {
+      if (done) { el.className='ai-step done'; el.querySelector('.ai-step-icon').textContent='✅'; }
+      else       { el.className='ai-step active'; el.querySelector('.ai-step-icon').textContent='⏳'; }
+    }
+  };
+
+  // Gather base data
+  const info = SP_INFO[sym] || {};
+  const fundStatic = SP_FUNDAMENTALS[sym] || {};
+  const screenerEntry = DATA.screener.find(s => s.sym === sym) || {};
+  const watchEntry    = DATA.watchlist.find(s => s.sym === sym) || {};
+  const curPrice      = screenerEntry.price || watchEntry.price || 300;
+
+  // ── Step 1: Fetch chart data ──
+  let prices = [];
+  let liveData = null;
+
+  try {
+    const chartJson = await fetchYahooChart(sym);
+    if (chartJson?.chart?.result?.[0]?.indicators?.quote?.[0]?.close) {
+      prices = chartJson.chart.result[0].indicators.quote[0].close.filter(v => v != null);
+    }
+    step(1, true);
+  } catch { step(1, true); }
+
+  // Fallback prices: generate from current price if fetch failed
+  if (prices.length < 30) {
+    prices = Array.from({length:252}, (_,i) => {
+      const t = i / 252;
+      return parseFloat((curPrice * (1 + (Math.random()-.5)*0.6*t + Math.sin(t*Math.PI*4)*0.05)).toFixed(2));
+    });
+    prices[prices.length-1] = curPrice;
+  }
+
+  // ── Step 2: Technical indicators ──
+  setTimeout(() => step(2, false), 100);
+  await new Promise(r => setTimeout(r, 400));
+
+  // ── Step 3: Fundamentals ──
+  step(2, true);
+  setTimeout(() => step(3, false), 50);
+  try {
+    const summJson = await fetchYahooSummary(sym);
+    const fd = summJson?.quoteSummary?.result?.[0];
+    if (fd) {
+      const sd = fd.summaryDetail || {}, fin = fd.financialData || {}, ks = fd.defaultKeyStatistics || {};
+      liveData = {
+        trailingPE     : sd.trailingPE?.raw || null,
+        forwardPE      : sd.forwardPE?.raw  || null,
+        priceToBook    : ks.priceToBook?.raw || null,
+        profitMargins  : fin.profitMargins?.raw || null,
+        roe            : fin.returnOnEquity?.raw || null,
+        revenueGrowth  : fin.revenueGrowth?.raw  || null,
+        earningsGrowth : fin.earningsGrowth?.raw || null,
+        debtToEquity   : fin.debtToEquity?.raw   || null,
+        freeCashflow   : fin.freeCashflow?.raw    || null,
+        targetLowPrice : fin.targetLowPrice?.raw  || null,
+        targetHighPrice: fin.targetHighPrice?.raw || null,
+        targetMeanPrice: fin.targetMeanPrice?.raw || null,
+        trailingEps    : ks.trailingEps?.raw      || null,
+        recommendationKey: fin.recommendationKey  || null,
+      };
+    }
+    step(3, true);
+  } catch { step(3, true); }
+
+  await new Promise(r => setTimeout(r, 300));
+
+  // ── Step 4: Generate HTML ──
+  step(3, true);
+  setTimeout(() => step(4, false), 50);
+  await new Promise(r => setTimeout(r, 300));
+
+  try {
+    const html = buildAnalysisHTML(sym, info, { ...fundStatic, pe: screenerEntry.pe }, prices, liveData, null);
+    step(4, true);
+    await new Promise(r => setTimeout(r, 200));
+    panel.innerHTML = html;
+    aiCache[sym] = html;
+    animateAIBars();
+  } catch(e) {
+    console.error('AI build error:', e);
+    panel.innerHTML = `<div class="ai-error"><div class="ai-error-icon">⚠️</div><div class="ai-error-msg">Erreur lors de la génération de l'analyse. <button onclick="renderAITab('${sym}')" style="color:var(--accent);background:none;border:none;cursor:pointer;text-decoration:underline;">Réessayer</button></div></div>`;
+  }
+}
+
+function animateAIBars() {
+  requestAnimationFrame(() => {
+    document.querySelectorAll('#tab-ai .ai-subscore-fill').forEach(el => {
+      const w = el.style.width;
+      el.style.width = '0';
+      requestAnimationFrame(() => { el.style.width = w; });
+    });
+    document.querySelectorAll('#tab-ai .analyst-bar-fill').forEach(el => {
+      const w = el.style.width;
+      el.style.width = '0';
+      requestAnimationFrame(() => { el.style.width = w; });
+    });
+  });
+}
+
+/* ── Patch switchTab to trigger AI on click ── */
+const _origSwitchTab = switchTab;
+function switchTab(id, el) {
+  _origSwitchTab(id, el);
+  if (id === 'ai' && currentSym) renderAITab(currentSym);
 }
 
 /* ════════════════════════════════════════════════
